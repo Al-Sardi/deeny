@@ -16,8 +16,23 @@ export default function BottomNav({ activeTab, onChangeTab }) {
       id: 'tasbih',
       label: 'Tasbih',
       icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+          {/* Prayer bead ring */}
+          <circle cx="12" cy="10" r="7" />
+          {/* Beads on the ring */}
+          <circle cx="12" cy="3" r="1.2" fill="currentColor" stroke="none" />
+          <circle cx="15.5" cy="4" r="1.2" fill="currentColor" stroke="none" />
+          <circle cx="17.8" cy="7" r="1.2" fill="currentColor" stroke="none" />
+          <circle cx="18" cy="10.5" r="1.2" fill="currentColor" stroke="none" />
+          <circle cx="16" cy="13.8" r="1.2" fill="currentColor" stroke="none" />
+          <circle cx="12" cy="15.8" r="1.2" fill="currentColor" stroke="none" />
+          <circle cx="8" cy="13.8" r="1.2" fill="currentColor" stroke="none" />
+          <circle cx="6" cy="10.5" r="1.2" fill="currentColor" stroke="none" />
+          <circle cx="6.2" cy="7" r="1.2" fill="currentColor" stroke="none" />
+          <circle cx="8.5" cy="4" r="1.2" fill="currentColor" stroke="none" />
+          {/* Tassel / pendant */}
+          <line x1="12" y1="17" x2="12" y2="21" />
+          <circle cx="12" cy="21.5" r="1" fill="currentColor" stroke="none" />
         </svg>
       ),
     },
