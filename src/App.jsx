@@ -6,6 +6,7 @@ import WeeklyStats from './components/WeeklyStats'
 import DailyAyah from './components/DailyAyah'
 import TasbihCounter from './components/TasbihCounter'
 import StreaksTab from './components/StreaksTab'
+import CalendarTab from './components/CalendarTab'
 import BottomNav from './components/BottomNav'
 import usePrayerTimes from './hooks/usePrayerTimes'
 
@@ -33,11 +34,11 @@ const getYesterday = () => {
 }
 
 /**
- * Archive a day's prayers into history, keeping at most 6 past entries.
- * Combined with today's live state, this gives a 7-day window.
+ * Archive a day's prayers into history, keeping at most 90 past entries.
+ * This supports the calendar view (3 months) and weekly stats.
  */
 function archiveDay(date, prayers, existingHistory) {
-  return [{ date, prayers: { ...prayers } }, ...existingHistory].slice(0, 6)
+  return [{ date, prayers: { ...prayers } }, ...existingHistory].slice(0, 90)
 }
 
 /**
@@ -160,6 +161,10 @@ export default function App() {
 
         {activeTab === 'streaks' && (
           <StreaksTab prayers={prayers} streak={streak} history={history} />
+        )}
+
+        {activeTab === 'calendar' && (
+          <CalendarTab prayers={prayers} history={history} />
         )}
       </div>
 
