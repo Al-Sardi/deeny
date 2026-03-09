@@ -3,6 +3,9 @@ import Header from './components/Header'
 import PrayerList from './components/PrayerList'
 import ProgressBar from './components/ProgressBar'
 import WeeklyStats from './components/WeeklyStats'
+import DailyAyah from './components/DailyAyah'
+import TasbihCounter from './components/TasbihCounter'
+import BottomNav from './components/BottomNav'
 import usePrayerTimes from './hooks/usePrayerTimes'
 
 const STORAGE_KEY = 'prayer-tracker'
@@ -90,6 +93,7 @@ export default function App() {
   const [streak, setStreak] = useState(data.streak)
   const [history] = useState(data.history)
   const [dark, setDark] = useState(() => localStorage.getItem(THEME_KEY) === 'dark')
+  const [activeTab, setActiveTab] = useState('prayers')
 
   const { prayerTimes, nextPrayer, nextPrayerTime, loading, error } = usePrayerTimes()
 
@@ -120,30 +124,40 @@ export default function App() {
   const completedCount = Object.values(prayers).filter(Boolean).length
 
   return (
-    <div className="flex min-h-dvh items-start justify-center bg-gray-50 px-4 pt-12 pb-16 dark:bg-gray-900 transition-colors">
+    <div className="flex min-h-dvh items-start justify-center bg-gray-50 px-4 pt-12 pb-24 dark:bg-gray-900 transition-colors">
       <div className="w-full max-w-md">
         <Header
-          streak={streak}
+          streak={activeTab === 'prayers' ? streak : undefined}
           dark={dark}
           onToggleTheme={() => setDark((d) => !d)}
-          nextPrayer={nextPrayer}
-          nextPrayerTime={nextPrayerTime}
-          loading={loading}
-          error={error}
+          nextPrayer={activeTab === 'prayers' ? nextPrayer : undefined}
+          nextPrayerTime={activeTab === 'prayers' ? nextPrayerTime : undefined}
+          loading={activeTab === 'prayers' ? loading : false}
+          error={activeTab === 'prayers' ? error : null}
         />
-        <PrayerList
-          prayers={prayers}
-          onToggle={togglePrayer}
-          onReset={resetToday}
-          prayerTimes={prayerTimes}
-        />
-        <div className="mt-8">
-          <ProgressBar completed={completedCount} total={TOTAL_PRAYERS} />
-        </div>
-        <div className="mt-4">
-          <WeeklyStats prayers={prayers} history={history} />
-        </div>
+
+        {activeTab === 'prayers' ? (
+          <>
+            <DailyAyah />
+            <PrayerList
+              prayers={prayers}
+              onToggle={togglePrayer}
+              onReset={resetToday}
+              prayerTimes={prayerTimes}
+            />
+            <div className="mt-8">
+              <ProgressBar completed={completedCount} total={TOTAL_PRAYERS} />
+            </div>
+            <div className="mt-4">
+              <WeeklyStats prayers={prayers} history={history} />
+            </div>
+          </>
+        ) : (
+          <TasbihCounter />
+        )}
       </div>
+
+      <BottomNav activeTab={activeTab} onChangeTab={setActiveTab} />
     </div>
   )
 }
