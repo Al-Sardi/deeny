@@ -5,6 +5,7 @@ import ProgressBar from './components/ProgressBar'
 import WeeklyStats from './components/WeeklyStats'
 import DailyAyah from './components/DailyAyah'
 import TasbihCounter from './components/TasbihCounter'
+import StreaksTab from './components/StreaksTab'
 import BottomNav from './components/BottomNav'
 import usePrayerTimes from './hooks/usePrayerTimes'
 
@@ -128,6 +129,7 @@ export default function App() {
       <div className="w-full max-w-md">
         <Header
           streak={activeTab === 'prayers' ? streak : undefined}
+          showStreakAndPrayer={activeTab === 'prayers'}
           dark={dark}
           onToggleTheme={() => setDark((d) => !d)}
           nextPrayer={activeTab === 'prayers' ? nextPrayer : undefined}
@@ -136,7 +138,7 @@ export default function App() {
           error={activeTab === 'prayers' ? error : null}
         />
 
-        {activeTab === 'prayers' ? (
+        {activeTab === 'prayers' && (
           <>
             <DailyAyah />
             <PrayerList
@@ -152,8 +154,12 @@ export default function App() {
               <WeeklyStats prayers={prayers} history={history} />
             </div>
           </>
-        ) : (
-          <TasbihCounter />
+        )}
+
+        {activeTab === 'tasbih' && <TasbihCounter />}
+
+        {activeTab === 'streaks' && (
+          <StreaksTab prayers={prayers} streak={streak} history={history} />
         )}
       </div>
 
