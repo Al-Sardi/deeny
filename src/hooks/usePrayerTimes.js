@@ -13,12 +13,10 @@ function timeToMinutes(timeStr) {
   return h * 60 + m
 }
 
-/** Format "HH:MM" (24h) to "H:MM AM/PM" */
-function formatTime12h(timeStr) {
+/** Format "HH:MM" keeping 24h format (strip leading zero) */
+function formatTime(timeStr) {
   const [h, m] = timeStr.split(':').map(Number)
-  const period = h >= 12 ? 'PM' : 'AM'
-  const hour12 = h % 12 || 12
-  return `${hour12}:${String(m).padStart(2, '0')} ${period}`
+  return `${h}:${String(m).padStart(2, '0')}`
 }
 
 /** Find the next prayer that hasn't passed yet, or null if all have */
@@ -62,7 +60,7 @@ export default function usePrayerTimes() {
     if (!prayerTimes) return
     const next = computeNextPrayer(prayerTimes)
     setNextPrayer(next ? next.name : null)
-    setNextPrayerTime(next ? formatTime12h(next.time) : null)
+    setNextPrayerTime(next ? formatTime(next.time) : null)
   }, [prayerTimes])
 
   // Fetch prayer times (cache-first, then geolocation + API)
