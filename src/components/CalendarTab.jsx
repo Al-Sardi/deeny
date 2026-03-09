@@ -71,7 +71,7 @@ function getCellTextColor(count) {
  * CalendarTab - Monthly prayer calendar showing completion per day.
  * Navigate between months with arrows. Days are color-coded by completion.
  */
-export default function CalendarTab({ prayers, history }) {
+export default function CalendarTab({ prayers, history, children }) {
   const now = new Date()
   const [viewYear, setViewYear] = useState(now.getFullYear())
   const [viewMonth, setViewMonth] = useState(now.getMonth())
@@ -236,6 +236,9 @@ export default function CalendarTab({ prayers, history }) {
           <span className="text-xs text-gray-400 dark:text-gray-500">0</span>
         </div>
       </div>
+
+      {/* Extra content (e.g. WeeklyStats) */}
+      {children}
     </div>
   )
 }

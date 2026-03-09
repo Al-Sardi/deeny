@@ -151,9 +151,6 @@ export default function App() {
             <div className="mt-8">
               <ProgressBar completed={completedCount} total={TOTAL_PRAYERS} />
             </div>
-            <div className="mt-4">
-              <WeeklyStats prayers={prayers} history={history} />
-            </div>
           </>
         )}
 
@@ -164,7 +161,9 @@ export default function App() {
         )}
 
         {activeTab === 'calendar' && (
-          <CalendarTab prayers={prayers} history={history} />
+          <CalendarTab prayers={prayers} history={history}>
+            <WeeklyStats prayers={prayers} history={history} />
+          </CalendarTab>
         )}
       </div>
 
