@@ -1,34 +1,42 @@
-/**
- * ProgressBar - Enhanced progress bar with smooth animation,
- * rounded corners, gradient fill, and percentage display.
- */
+import { motion } from 'framer-motion'
+
 export default function ProgressBar({ completed, total }) {
-  const percentage = Math.round((completed / total) * 100)
-  const isComplete = completed === total
+  const pct = Math.round((completed / total) * 100)
+  const done = completed === total
 
   return (
-    <div className="rounded-xl bg-white p-5 shadow-sm dark:bg-gray-800">
-      <div className="mb-3 flex items-center justify-between text-sm font-medium text-gray-600 dark:text-gray-400">
-        <span>Progress</span>
-        <span className={isComplete ? 'text-green-600 dark:text-green-400 font-semibold' : ''}>
-          {completed}/{total} — {percentage}%
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, delay: 0.2 }}
+      className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+    >
+      <div className="mb-3 flex items-baseline justify-between">
+        <span className="text-sm text-zinc-500 dark:text-zinc-400">Today&apos;s progress</span>
+        <span className={`text-sm tabular-nums ${done ? 'font-semibold text-emerald-600 dark:text-emerald-400' : 'text-zinc-500 dark:text-zinc-400'}`}>
+          {completed}/{total}
         </span>
       </div>
-      <div className="h-4 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-gray-700">
-        <div
-          className={`h-full rounded-full transition-all duration-700 ease-out ${
-            isComplete
-              ? 'bg-gradient-to-r from-green-400 to-emerald-500'
-              : 'bg-gradient-to-r from-green-400 to-green-500'
-          }`}
-          style={{ width: `${percentage}%` }}
+
+      <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${pct}%` }}
+          transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.3 }}
+          className="h-full rounded-full bg-emerald-500"
         />
       </div>
-      {isComplete && (
-        <p className="mt-2 text-center text-sm font-medium text-green-600 dark:text-green-400">
-          All prayers completed!
-        </p>
+
+      {done && (
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="mt-3 text-center text-sm font-medium text-emerald-600 dark:text-emerald-400"
+        >
+          All prayers completed ✓
+        </motion.p>
       )}
-    </div>
+    </motion.div>
   )
 }

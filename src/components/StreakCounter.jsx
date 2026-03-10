@@ -1,17 +1,12 @@
-/**
- * StreakCounter - Displays the user's consecutive-days streak.
- * A streak increments when all 5 prayers are completed in a day.
- */
+// StreakCounter is now inlined in Header.jsx — this file kept for compatibility
+import { Flame } from 'lucide-react'
+
 export default function StreakCounter({ streak }) {
   return (
-    <div className="flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 shadow-sm dark:bg-gray-800">
-      <span className="text-2xl" role="img" aria-label="fire">
-        🔥
-      </span>
-      <span className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-        Current Streak:{' '}
-        <span className="text-green-600 dark:text-green-400">{streak}</span>{' '}
-        {streak === 1 ? 'day' : 'days'}
+    <div className="flex items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1.5 dark:bg-orange-950/40">
+      <Flame size={14} className="text-orange-500" fill="currentColor" />
+      <span className="text-sm font-semibold text-orange-600 dark:text-orange-400">
+        {streak}
       </span>
     </div>
   )

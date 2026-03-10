@@ -1,298 +1,174 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { motion } from 'framer-motion'
+import { Flame, Trophy, CalendarDays, Hash, Check, Lock } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
+import {
+  fetchUnlockedAchievements,
+  insertAchievements,
+  fetchPrayerStats,
+  fetchTasbihTotal,
+} from '../lib/supabaseAchievements'
 
-const ACHIEVEMENTS_KEY = 'achievements-data'
-
-/**
- * Achievement definitions.
- * Each has an id, label, description, icon, and a check function
- * that receives stats and returns true when unlocked.
- */
 const ACHIEVEMENTS = [
-  {
-    id: 'first-prayer',
-    label: 'First Step',
-    description: 'Complete your first prayer',
-    icon: '🌱',
-    check: (s) => s.totalPrayers >= 1,
-  },
-  {
-    id: 'perfect-day',
-    label: 'Perfect Day',
-    description: 'Complete all 5 prayers in a day',
-    icon: '⭐',
-    check: (s) => s.perfectDays >= 1,
-  },
-  {
-    id: 'streak-3',
-    label: 'On Fire',
-    description: 'Reach a 3-day streak',
-    icon: '🔥',
-    check: (s) => s.bestStreak >= 3,
-  },
-  {
-    id: 'streak-7',
-    label: 'Week Warrior',
-    description: 'Reach a 7-day streak',
-    icon: '🏅',
-    check: (s) => s.bestStreak >= 7,
-  },
-  {
-    id: 'streak-30',
-    label: 'Unstoppable',
-    description: 'Reach a 30-day streak',
-    icon: '👑',
-    check: (s) => s.bestStreak >= 30,
-  },
-  {
-    id: 'prayers-50',
-    label: 'Devoted',
-    description: 'Complete 50 prayers total',
-    icon: '🕌',
-    check: (s) => s.totalPrayers >= 50,
-  },
-  {
-    id: 'prayers-100',
-    label: 'Centurion',
-    description: 'Complete 100 prayers total',
-    icon: '💯',
-    check: (s) => s.totalPrayers >= 100,
-  },
-  {
-    id: 'prayers-500',
-    label: 'Faithful',
-    description: 'Complete 500 prayers total',
-    icon: '🌟',
-    check: (s) => s.totalPrayers >= 500,
-  },
-  {
-    id: 'tasbih-1000',
-    label: 'Tasbih Master',
-    description: 'Count 1,000 tasbih total',
-    icon: '📿',
-    check: (s) => s.tasbihTotal >= 1000,
-  },
-  {
-    id: 'perfect-week',
-    label: 'Perfect Week',
-    description: 'Complete all prayers every day for a week',
-    icon: '🏆',
-    check: (s) => s.weeklyPerfect >= 7,
-  },
+  { id: 'first-prayer', label: 'First Step', description: 'Complete your first prayer', icon: '🌱', check: (s) => s.totalPrayers >= 1 },
+  { id: 'perfect-day', label: 'Perfect Day', description: 'Complete all 5 prayers in a day', icon: '⭐', check: (s) => s.perfectDays >= 1 },
+  { id: 'streak-3', label: 'On Fire', description: 'Reach a 3-day streak', icon: '🔥', check: (s) => s.bestStreak >= 3 },
+  { id: 'streak-7', label: 'Week Warrior', description: 'Reach a 7-day streak', icon: '🏅', check: (s) => s.bestStreak >= 7 },
+  { id: 'streak-30', label: 'Unstoppable', description: 'Reach a 30-day streak', icon: '👑', check: (s) => s.bestStreak >= 30 },
+  { id: 'prayers-50', label: 'Devoted', description: 'Complete 50 prayers total', icon: '🕌', check: (s) => s.totalPrayers >= 50 },
+  { id: 'prayers-100', label: 'Centurion', description: 'Complete 100 prayers total', icon: '💯', check: (s) => s.totalPrayers >= 100 },
+  { id: 'prayers-500', label: 'Faithful', description: 'Complete 500 prayers total', icon: '🌟', check: (s) => s.totalPrayers >= 500 },
+  { id: 'tasbih-1000', label: 'Tasbih Master', description: 'Count 1,000 tasbih total', icon: '📿', check: (s) => s.tasbihTotal >= 1000 },
+  { id: 'perfect-week', label: 'Perfect Week', description: 'Complete all prayers every day for a week', icon: '🏆', check: (s) => s.weeklyPerfect >= 7 },
 ]
 
-/** Load persisted achievement data */
-function loadAchievements() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(ACHIEVEMENTS_KEY))
-    if (saved) return saved
-  } catch { /* ignore */ }
-  return { totalPrayers: 0, bestStreak: 0, perfectDays: 0, unlocked: [] }
+const fadeUp = {
+  hidden: { opacity: 0, y: 10 },
+  visible: (i) => ({
+    opacity: 1, y: 0,
+    transition: { duration: 0.3, ease: 'easeOut', delay: i * 0.04 },
+  }),
 }
 
-/** Save achievement data to localStorage */
-function saveAchievements(data) {
-  localStorage.setItem(ACHIEVEMENTS_KEY, JSON.stringify(data))
-}
-
-/**
- * Compute current stats from app state + localStorage.
- * This merges persisted totals with live session data.
- */
-function computeStats(prayers, streak, history) {
-  const saved = loadAchievements()
-
-  // Count today's completed prayers
-  const todayCompleted = Object.values(prayers).filter(Boolean).length
-  const todayPerfect = todayCompleted === 5
-
-  // Count total prayers: persisted total + today's (avoid double-counting)
-  // We track cumulative in localStorage, updated on each computation
-  const historyPrayers = history.reduce((sum, day) => {
-    return sum + Object.values(day.prayers).filter(Boolean).length
-  }, 0)
-  const totalPrayers = Math.max(saved.totalPrayers, historyPrayers + todayCompleted)
-
-  // Perfect days from history + today
-  const historyPerfectDays = history.filter(
-    (day) => Object.values(day.prayers).every(Boolean)
-  ).length
-  const perfectDays = Math.max(saved.perfectDays, historyPerfectDays + (todayPerfect ? 1 : 0))
-
-  // Best streak: max of saved best and current
-  const bestStreak = Math.max(saved.bestStreak, streak + (todayPerfect ? 1 : 0))
-
-  // Weekly perfect: days in last 7 with all 5 done
-  const weeklyPerfect = historyPerfectDays + (todayPerfect ? 1 : 0)
-
-  // Tasbih total from its own localStorage key
-  let tasbihTotal = 0
-  try {
-    const tasbih = JSON.parse(localStorage.getItem('tasbih-data'))
-    if (tasbih) tasbihTotal = tasbih.total ?? 0
-  } catch { /* ignore */ }
-
-  return { totalPrayers, bestStreak, perfectDays, weeklyPerfect, tasbihTotal }
-}
-
-/**
- * StreaksTab - Displays streak info and unlockable achievements.
- */
 export default function StreaksTab({ prayers, streak, history }) {
-  const [stats, setStats] = useState(() => computeStats(prayers, streak, history))
-  const [unlocked, setUnlocked] = useState(() => loadAchievements().unlocked ?? [])
+  const { user } = useAuth()
+  const [stats, setStats] = useState({ totalPrayers: 0, bestStreak: 0, perfectDays: 0, weeklyPerfect: 0, tasbihTotal: 0 })
+  const [unlocked, setUnlocked] = useState([])
   const [newlyUnlocked, setNewlyUnlocked] = useState([])
+  const [dbStats, setDbStats] = useState(null)
+  const [dbTasbihTotal, setDbTasbihTotal] = useState(0)
+  const insertedRef = useRef(new Set())
 
-  // Recompute stats when prayers/streak/history change
   useEffect(() => {
-    const newStats = computeStats(prayers, streak, history)
+    let cancelled = false
+    async function load() {
+      try {
+        const [achRes, statsRes, tasbihRes] = await Promise.all([
+          fetchUnlockedAchievements(user.id),
+          fetchPrayerStats(user.id),
+          fetchTasbihTotal(user.id),
+        ])
+        if (cancelled) return
+        if (achRes.data) { setUnlocked(achRes.data); achRes.data.forEach((id) => insertedRef.current.add(id)) }
+        if (statsRes.stats) setDbStats(statsRes.stats)
+        setDbTasbihTotal(tasbihRes.total ?? 0)
+      } catch (err) { console.error('Failed to load achievements:', err) }
+
+      try {
+        const raw = localStorage.getItem('achievements-data')
+        if (raw) {
+          const saved = JSON.parse(raw)
+          if (saved?.unlocked?.length > 0) await insertAchievements(user.id, saved.unlocked)
+          localStorage.removeItem('achievements-data')
+        }
+      } catch { /* ignore */ }
+    }
+    load()
+    return () => { cancelled = true }
+  }, [user.id])
+
+  useEffect(() => {
+    const todayCompleted = Object.values(prayers).filter(Boolean).length
+    const todayPerfect = todayCompleted === 5
+    const baseTotalPrayers = dbStats?.totalPrayers ?? 0
+    const basePerfectDays = dbStats?.perfectDays ?? 0
+    const basebestStreak = dbStats?.bestStreak ?? 0
+    const totalPrayers = Math.max(baseTotalPrayers, baseTotalPrayers)
+    const perfectDays = basePerfectDays
+    const bestStreak = Math.max(basebestStreak, streak + (todayPerfect ? 1 : 0))
+    const recentHistory = history.slice(0, 6)
+    const weeklyPerfect = recentHistory.filter((day) => Object.values(day.prayers).every(Boolean)).length + (todayPerfect ? 1 : 0)
+    const newStats = { totalPrayers, bestStreak, perfectDays, weeklyPerfect, tasbihTotal: dbTasbihTotal }
     setStats(newStats)
 
-    // Check for newly unlocked achievements
-    const currentUnlocked = loadAchievements().unlocked ?? []
-    const freshUnlocks = []
-
-    ACHIEVEMENTS.forEach((a) => {
-      if (!currentUnlocked.includes(a.id) && a.check(newStats)) {
-        freshUnlocks.push(a.id)
-      }
-    })
+    const freshUnlocks = ACHIEVEMENTS.filter(
+      (a) => !unlocked.includes(a.id) && !insertedRef.current.has(a.id) && a.check(newStats)
+    ).map((a) => a.id)
 
     if (freshUnlocks.length > 0) {
-      const allUnlocked = [...currentUnlocked, ...freshUnlocks]
+      const allUnlocked = [...unlocked, ...freshUnlocks]
       setUnlocked(allUnlocked)
       setNewlyUnlocked(freshUnlocks)
-
-      // Persist updated achievements
-      saveAchievements({
-        totalPrayers: newStats.totalPrayers,
-        bestStreak: newStats.bestStreak,
-        perfectDays: newStats.perfectDays,
-        unlocked: allUnlocked,
-      })
-
-      // Clear "new" animation after 2 seconds
+      freshUnlocks.forEach((id) => insertedRef.current.add(id))
+      insertAchievements(user.id, freshUnlocks).catch(console.error)
       setTimeout(() => setNewlyUnlocked([]), 2000)
-    } else {
-      // Still persist updated stats
-      saveAchievements({
-        totalPrayers: newStats.totalPrayers,
-        bestStreak: newStats.bestStreak,
-        perfectDays: newStats.perfectDays,
-        unlocked: currentUnlocked,
-      })
     }
-  }, [prayers, streak, history])
+  }, [prayers, streak, history, dbStats, dbTasbihTotal, unlocked, user.id])
 
   const todayComplete = Object.values(prayers).filter(Boolean).length === 5
 
+  const statCards = [
+    { Icon: Flame, iconClass: 'text-orange-500', value: streak + (todayComplete ? 1 : 0), label: 'Current streak' },
+    { Icon: Trophy, iconClass: 'text-amber-500', value: stats.bestStreak, label: 'Best streak' },
+    { Icon: CalendarDays, iconClass: 'text-blue-500', value: `${stats.weeklyPerfect}/7`, label: 'This week' },
+    { Icon: Hash, iconClass: 'text-emerald-500', value: stats.totalPrayers, label: 'Total prayers' },
+  ]
+
   return (
-    <div className="flex flex-col gap-6">
-      {/* Streak cards */}
+    <div className="space-y-6">
+      {/* Stat grid */}
       <div className="grid grid-cols-2 gap-3">
-        {/* Daily streak */}
-        <div className="flex flex-col items-center gap-1 rounded-xl bg-white px-4 py-5 shadow-sm dark:bg-gray-800">
-          <span className="text-3xl">🔥</span>
-          <span className="text-3xl font-bold text-gray-800 dark:text-gray-100">
-            {streak + (todayComplete ? 1 : 0)}
-          </span>
-          <span className="text-xs font-medium text-gray-400 dark:text-gray-500">
-            Day Streak
-          </span>
-        </div>
-
-        {/* Best streak */}
-        <div className="flex flex-col items-center gap-1 rounded-xl bg-white px-4 py-5 shadow-sm dark:bg-gray-800">
-          <span className="text-3xl">⭐</span>
-          <span className="text-3xl font-bold text-gray-800 dark:text-gray-100">
-            {stats.bestStreak}
-          </span>
-          <span className="text-xs font-medium text-gray-400 dark:text-gray-500">
-            Best Streak
-          </span>
-        </div>
-
-        {/* Weekly completion */}
-        <div className="flex flex-col items-center gap-1 rounded-xl bg-white px-4 py-5 shadow-sm dark:bg-gray-800">
-          <span className="text-3xl">📅</span>
-          <span className="text-3xl font-bold text-gray-800 dark:text-gray-100">
-            {stats.weeklyPerfect}<span className="text-lg text-gray-400 dark:text-gray-500">/7</span>
-          </span>
-          <span className="text-xs font-medium text-gray-400 dark:text-gray-500">
-            This Week
-          </span>
-        </div>
-
-        {/* Total prayers */}
-        <div className="flex flex-col items-center gap-1 rounded-xl bg-white px-4 py-5 shadow-sm dark:bg-gray-800">
-          <span className="text-3xl">🕌</span>
-          <span className="text-3xl font-bold text-gray-800 dark:text-gray-100">
-            {stats.totalPrayers}
-          </span>
-          <span className="text-xs font-medium text-gray-400 dark:text-gray-500">
-            Total Prayers
-          </span>
-        </div>
+        {statCards.map(({ Icon, iconClass, value, label }, i) => (
+          <motion.div
+            key={label}
+            custom={i}
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+            className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+          >
+            <Icon size={18} className={`mb-3 ${iconClass}`} strokeWidth={1.5} />
+            <p className="text-2xl font-semibold tracking-tight text-zinc-900 tabular-nums dark:text-zinc-100">
+              {value}
+            </p>
+            <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">{label}</p>
+          </motion.div>
+        ))}
       </div>
 
-      {/* Achievements section */}
+      {/* Achievements */}
       <div>
-        <h2 className="mb-3 text-center text-sm font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
+        <h2 className="mb-3 text-sm font-medium text-zinc-500 dark:text-zinc-400">
           Achievements
         </h2>
-        <div className="flex flex-col gap-2">
-          {ACHIEVEMENTS.map((a) => {
+        <div className="rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+          {ACHIEVEMENTS.map((a, i) => {
             const isUnlocked = unlocked.includes(a.id)
             const isNew = newlyUnlocked.includes(a.id)
+            const isLast = i === ACHIEVEMENTS.length - 1
 
             return (
-              <div
+              <motion.div
                 key={a.id}
-                className={`flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-500
-                  ${isUnlocked
-                    ? 'bg-white shadow-sm dark:bg-gray-800'
-                    : 'bg-gray-100/50 dark:bg-gray-800/40'
-                  }
-                  ${isNew ? 'animate-bounce ring-2 ring-green-400' : ''}`}
+                custom={i}
+                variants={fadeUp}
+                initial="hidden"
+                animate="visible"
+                className={`flex items-center gap-4 px-5 py-3.5
+                  ${!isLast ? 'border-b border-zinc-100 dark:border-zinc-800' : ''}
+                  ${isNew ? 'bg-emerald-50/50 dark:bg-emerald-950/20' : ''}`}
               >
-                {/* Icon */}
-                <span
-                  className={`text-2xl transition-all duration-500
-                    ${isUnlocked ? 'opacity-100 scale-100' : 'opacity-30 scale-90 grayscale'}`}
-                >
+                <span className={`text-xl transition-all ${isUnlocked ? '' : 'opacity-20 grayscale'}`}>
                   {a.icon}
                 </span>
 
-                {/* Label + description */}
-                <div className="flex-1">
-                  <p
-                    className={`text-sm font-semibold transition-colors duration-300
-                      ${isUnlocked
-                        ? 'text-gray-800 dark:text-gray-100'
-                        : 'text-gray-400 dark:text-gray-600'
-                      }`}
-                  >
+                <div className="min-w-0 flex-1">
+                  <p className={`text-sm font-medium ${isUnlocked ? 'text-zinc-900 dark:text-zinc-100' : 'text-zinc-400 dark:text-zinc-600'}`}>
                     {a.label}
                   </p>
-                  <p
-                    className={`text-xs transition-colors duration-300
-                      ${isUnlocked
-                        ? 'text-gray-500 dark:text-gray-400'
-                        : 'text-gray-300 dark:text-gray-700'
-                      }`}
-                  >
+                  <p className={`text-xs ${isUnlocked ? 'text-zinc-500 dark:text-zinc-400' : 'text-zinc-300 dark:text-zinc-700'}`}>
                     {a.description}
                   </p>
                 </div>
 
-                {/* Unlocked badge */}
-                {isUnlocked && (
-                  <span className="text-green-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </span>
+                {isUnlocked ? (
+                  <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500">
+                    <Check size={12} strokeWidth={3} className="text-white" />
+                  </div>
+                ) : (
+                  <Lock size={14} className="text-zinc-300 dark:text-zinc-700" strokeWidth={1.5} />
                 )}
-              </div>
+              </motion.div>
             )
           })}
         </div>

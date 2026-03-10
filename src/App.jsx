@@ -1,20 +1,30 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useAuth } from './context/AuthContext'
 import Header from './components/Header'
 import PrayerList from './components/PrayerList'
 import ProgressBar from './components/ProgressBar'
 import WeeklyStats from './components/WeeklyStats'
 import DailyAyah from './components/DailyAyah'
-import TasbihCounter from './components/TasbihCounter'
 import StreaksTab from './components/StreaksTab'
 import CalendarTab from './components/CalendarTab'
+import SettingsTab from './components/SettingsTab'
+import ToolsTab from './components/ToolsTab'
 import BottomNav from './components/BottomNav'
 import usePrayerTimes from './hooks/usePrayerTimes'
+import {
+  fetchTodayPrayers,
+  fetchYesterdayPrayers,
+  fetchPrayerHistory,
+  upsertTodayPrayers,
+  bulkInsertHistory,
+  rowToPrayers,
+  rowsToHistory,
+} from './lib/supabasePrayers'
 
-const STORAGE_KEY = 'prayer-tracker'
 const THEME_KEY = 'prayer-theme'
 const TOTAL_PRAYERS = 5
 
-/** Default state: all prayers unchecked */
 const defaultPrayers = () => ({
   Fajr: false,
   Dhuhr: false,
@@ -23,148 +33,196 @@ const defaultPrayers = () => ({
   Isha: false,
 })
 
-/** Get today's date as YYYY-MM-DD string */
 const getToday = () => new Date().toISOString().split('T')[0]
 
-/** Get yesterday's date as YYYY-MM-DD string */
 const getYesterday = () => {
   const d = new Date()
   d.setDate(d.getDate() - 1)
   return d.toISOString().split('T')[0]
 }
 
-/**
- * Archive a day's prayers into history, keeping at most 90 past entries.
- * This supports the calendar view (3 months) and weekly stats.
- */
-function archiveDay(date, prayers, existingHistory) {
-  return [{ date, prayers: { ...prayers } }, ...existingHistory].slice(0, 90)
-}
-
-/**
- * Load saved data from localStorage.
- * Handles daily reset, streak calculation, and history archiving:
- * - Same day → restore prayers, streak, and history as-is
- * - Yesterday with all 5 completed → archive, reset prayers, streak +1
- * - Yesterday incomplete → archive, reset prayers and streak
- * - Older → archive, reset prayers and streak
- */
-function loadData() {
-  const defaults = { prayers: defaultPrayers(), streak: 0, history: [] }
-
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY))
-    if (!saved) return defaults
-
-    const today = getToday()
-    const previousHistory = saved.history ?? []
-
-    // Same day — restore everything
-    if (saved.date === today) {
-      return {
-        prayers: saved.prayers,
-        streak: saved.streak ?? 0,
-        history: previousHistory,
-      }
-    }
-
-    // Yesterday — archive and check streak
-    if (saved.date === getYesterday()) {
-      const allDone = Object.values(saved.prayers).every(Boolean)
-      return {
-        prayers: defaultPrayers(),
-        streak: allDone ? (saved.streak ?? 0) + 1 : 0,
-        history: archiveDay(saved.date, saved.prayers, previousHistory),
-      }
-    }
-
-    // Older than yesterday — archive but reset streak
-    return {
-      prayers: defaultPrayers(),
-      streak: 0,
-      history: archiveDay(saved.date, saved.prayers, previousHistory),
-    }
-  } catch {
-    return defaults
-  }
+const tabVariants = {
+  initial: { opacity: 0, y: 6 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.2, ease: 'easeOut' } },
+  exit: { opacity: 0, y: -6, transition: { duration: 0.12 } },
 }
 
 export default function App() {
-  const [data] = useState(loadData)
-  const [prayers, setPrayers] = useState(data.prayers)
-  const [streak, setStreak] = useState(data.streak)
-  const [history] = useState(data.history)
+  const { user } = useAuth()
+
+  const [prayers, setPrayers] = useState(defaultPrayers())
+  const [streak, setStreak] = useState(0)
+  const [history, setHistory] = useState([])
+  const [dataLoading, setDataLoading] = useState(true)
+
   const [dark, setDark] = useState(() => localStorage.getItem(THEME_KEY) === 'dark')
   const [activeTab, setActiveTab] = useState('prayers')
 
   const { prayerTimes, nextPrayer, nextPrayerTime, loading, error } = usePrayerTimes()
 
-  // Persist to localStorage whenever prayers or streak change
-  useEffect(() => {
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({ date: getToday(), prayers, streak, history })
-    )
-  }, [prayers, streak, history])
+  const saveTimerRef = useRef(null)
 
-  // Apply dark class to <html> and persist preference
+  useEffect(() => {
+    let cancelled = false
+
+    async function loadFromSupabase() {
+      const today = getToday()
+      const yesterday = getYesterday()
+
+      try {
+        const [todayRes, yesterdayRes, historyRes] = await Promise.all([
+          fetchTodayPrayers(user.id, today),
+          fetchYesterdayPrayers(user.id, yesterday),
+          fetchPrayerHistory(user.id, today),
+        ])
+
+        if (cancelled) return
+
+        if (todayRes.error || historyRes.error) {
+          console.error('Supabase load error:', todayRes.error || historyRes.error)
+          setDataLoading(false)
+          return
+        }
+
+        const historyData = rowsToHistory(historyRes.data ?? [])
+
+        if (todayRes.data) {
+          setPrayers(rowToPrayers(todayRes.data))
+          setStreak(todayRes.data.streak)
+        } else {
+          const yRow = yesterdayRes.data
+          if (yRow) {
+            const allDone = [yRow.fajr, yRow.dhuhr, yRow.asr, yRow.maghrib, yRow.isha].every(Boolean)
+            setStreak(allDone ? (yRow.streak ?? 0) + 1 : 0)
+          } else {
+            setStreak(0)
+          }
+        }
+
+        setHistory(historyData)
+      } catch (err) {
+        console.error('Failed to load prayer data:', err)
+      } finally {
+        if (!cancelled) setDataLoading(false)
+      }
+    }
+
+    loadFromSupabase()
+    return () => { cancelled = true }
+  }, [user.id])
+
+  useEffect(() => {
+    if (dataLoading) return
+
+    async function migrate() {
+      try {
+        const raw = localStorage.getItem('prayer-tracker')
+        if (!raw) return
+        const saved = JSON.parse(raw)
+        if (!saved) return
+        if (history.length > 0) return
+
+        if (saved.history?.length > 0) await bulkInsertHistory(user.id, saved.history)
+        if (saved.date === getToday() && saved.prayers) {
+          await upsertTodayPrayers(user.id, getToday(), saved.prayers, saved.streak ?? 0)
+          setPrayers(saved.prayers)
+          setStreak(saved.streak ?? 0)
+        }
+
+        const { data } = await fetchPrayerHistory(user.id, getToday())
+        if (data) setHistory(rowsToHistory(data))
+        localStorage.removeItem('prayer-tracker')
+      } catch (err) {
+        console.error('localStorage migration failed:', err)
+      }
+    }
+
+    migrate()
+  }, [dataLoading, history.length, user.id])
+
+  useEffect(() => {
+    if (dataLoading) return
+
+    clearTimeout(saveTimerRef.current)
+    saveTimerRef.current = setTimeout(() => {
+      upsertTodayPrayers(user.id, getToday(), prayers, streak)
+        .then(({ error }) => { if (error) console.error('Failed to save prayers:', error) })
+    }, 500)
+
+    return () => clearTimeout(saveTimerRef.current)
+  }, [prayers, streak, user.id, dataLoading])
+
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark)
     localStorage.setItem(THEME_KEY, dark ? 'dark' : 'light')
   }, [dark])
 
-  /** Toggle a prayer's completion status */
-  const togglePrayer = (name) => {
-    setPrayers((prev) => ({ ...prev, [name]: !prev[name] }))
-  }
-
-  /** Reset all prayers for today */
-  const resetToday = () => {
-    setPrayers(defaultPrayers())
-  }
-
+  const togglePrayer = (name) => setPrayers((prev) => ({ ...prev, [name]: !prev[name] }))
+  const resetToday = () => setPrayers(defaultPrayers())
   const completedCount = Object.values(prayers).filter(Boolean).length
 
+  if (dataLoading) {
+    return (
+      <div className="flex min-h-dvh items-center justify-center bg-zinc-50 dark:bg-zinc-950">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
+          <span className="text-sm text-zinc-400 dark:text-zinc-500">Loading…</span>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="flex min-h-dvh items-start justify-center bg-gray-50 px-4 pt-12 pb-24 dark:bg-gray-900 transition-colors">
+    <div className="flex min-h-dvh items-start justify-center bg-zinc-50 px-5 pt-14 pb-28 transition-colors dark:bg-zinc-950">
       <div className="w-full max-w-md">
         <Header
           streak={activeTab === 'prayers' ? streak : undefined}
-          showStreakAndPrayer={activeTab === 'prayers'}
-          dark={dark}
-          onToggleTheme={() => setDark((d) => !d)}
           nextPrayer={activeTab === 'prayers' ? nextPrayer : undefined}
           nextPrayerTime={activeTab === 'prayers' ? nextPrayerTime : undefined}
           loading={activeTab === 'prayers' ? loading : false}
           error={activeTab === 'prayers' ? error : null}
         />
 
-        {activeTab === 'prayers' && (
-          <>
-            <DailyAyah />
-            <PrayerList
-              prayers={prayers}
-              onToggle={togglePrayer}
-              onReset={resetToday}
-              prayerTimes={prayerTimes}
-            />
-            <div className="mt-8">
+        <AnimatePresence mode="wait">
+          {activeTab === 'prayers' && (
+            <motion.div key="prayers" variants={tabVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
+              <DailyAyah />
+              <PrayerList
+                prayers={prayers}
+                onToggle={togglePrayer}
+                onReset={resetToday}
+                prayerTimes={prayerTimes}
+              />
               <ProgressBar completed={completedCount} total={TOTAL_PRAYERS} />
-            </div>
-          </>
-        )}
+            </motion.div>
+          )}
 
-        {activeTab === 'tasbih' && <TasbihCounter />}
+          {activeTab === 'streaks' && (
+            <motion.div key="streaks" variants={tabVariants} initial="initial" animate="animate" exit="exit">
+              <StreaksTab prayers={prayers} streak={streak} history={history} />
+            </motion.div>
+          )}
 
-        {activeTab === 'streaks' && (
-          <StreaksTab prayers={prayers} streak={streak} history={history} />
-        )}
+          {activeTab === 'calendar' && (
+            <motion.div key="calendar" variants={tabVariants} initial="initial" animate="animate" exit="exit">
+              <CalendarTab prayers={prayers} history={history}>
+                <WeeklyStats prayers={prayers} history={history} />
+              </CalendarTab>
+            </motion.div>
+          )}
 
-        {activeTab === 'calendar' && (
-          <CalendarTab prayers={prayers} history={history}>
-            <WeeklyStats prayers={prayers} history={history} />
-          </CalendarTab>
-        )}
+          {activeTab === 'tools' && (
+            <motion.div key="tools" variants={tabVariants} initial="initial" animate="animate" exit="exit">
+              <ToolsTab />
+            </motion.div>
+          )}
+
+          {activeTab === 'settings' && (
+            <motion.div key="settings" variants={tabVariants} initial="initial" animate="animate" exit="exit">
+              <SettingsTab dark={dark} onToggleTheme={() => setDark((d) => !d)} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <BottomNav activeTab={activeTab} onChangeTab={setActiveTab} />
