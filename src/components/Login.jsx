@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { isSupabaseConfigured } from '../lib/supabase'
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -15,13 +16,24 @@ export default function Login() {
     setError(null)
     setLoading(true)
 
-    const { error: err } = await signIn(email, password)
-
-    if (err) {
-      setError(err.message)
+    if (!isSupabaseConfigured) {
+      setError('Backend is not configured. Please set the Supabase environment variables.')
       setLoading(false)
-    } else {
-      navigate('/app')
+      return
+    }
+
+    try {
+      const { error: err } = await signIn(email, password)
+
+      if (err) {
+        setError(err.message)
+        setLoading(false)
+      } else {
+        navigate('/app')
+      }
+    } catch {
+      setError('Unable to connect to the server. Please check your connection and try again.')
+      setLoading(false)
     }
   }
 

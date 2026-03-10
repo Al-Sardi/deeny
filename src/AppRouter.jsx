@@ -17,8 +17,8 @@ export default function AppRouter() {
   // While checking auth state, show nothing (prevents flash)
   if (loading) {
     return (
-      <div className="flex min-h-dvh items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-green-600 border-t-transparent" />
+      <div className="flex min-h-dvh items-center justify-center bg-zinc-50 dark:bg-zinc-950">
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
       </div>
     )
   }

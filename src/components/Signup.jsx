@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Check } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import { isSupabaseConfigured } from '../lib/supabase'
 
 export default function Signup() {
   const [email, setEmail] = useState('')
@@ -23,21 +24,32 @@ export default function Signup() {
       return
     }
 
-    const { data, error: err } = await signUp(email, password)
+    if (!isSupabaseConfigured) {
+      setError('Backend is not configured. Please set the Supabase environment variables.')
+      setLoading(false)
+      return
+    }
 
-    if (err) {
-      setError(err.message)
-      setLoading(false)
-    } else if (data?.user?.identities?.length === 0) {
-      setError('An account with this email already exists.')
-      setLoading(false)
-    } else {
-      if (data?.session) {
-        navigate('/app')
-      } else {
-        setSuccess(true)
+    try {
+      const { data, error: err } = await signUp(email, password)
+
+      if (err) {
+        setError(err.message)
         setLoading(false)
+      } else if (data?.user?.identities?.length === 0) {
+        setError('An account with this email already exists.')
+        setLoading(false)
+      } else {
+        if (data?.session) {
+          navigate('/app')
+        } else {
+          setSuccess(true)
+          setLoading(false)
+        }
       }
+    } catch {
+      setError('Unable to connect to the server. Please check your connection and try again.')
+      setLoading(false)
     }
   }
 
