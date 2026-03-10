@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Compass, CircleDot, ChevronRight } from 'lucide-react'
+import { Compass, CircleDot, BookOpenText, ChevronRight } from 'lucide-react'
 import QiblaFinder from './QiblaFinder'
 import TasbihCounter from './TasbihCounter'
+import DhikrLibrary from './DhikrLibrary'
 
 const tools = [
   { id: 'qibla', label: 'Qibla Finder', desc: 'Find the direction of the Kaaba', Icon: Compass },
   { id: 'tasbih', label: 'Tasbih Counter', desc: 'Digital prayer bead counter', Icon: CircleDot },
+  { id: 'dhikr', label: 'Dhikr Library', desc: 'Browse and recite adhkar', Icon: BookOpenText },
 ]
 
 export default function ToolsTab() {
@@ -40,6 +42,10 @@ export default function ToolsTab() {
         <TasbihCounter />
       </div>
     )
+  }
+
+  if (activeTool === 'dhikr') {
+    return <DhikrLibrary onBack={() => setActiveTool(null)} />
   }
 
   return (

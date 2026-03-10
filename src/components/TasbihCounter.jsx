@@ -10,11 +10,11 @@ import { fetchTasbih, upsertTasbih } from '../lib/supabaseTasbih'
 const TARGETS = [33, 99, null] // null = no limit
 const TARGET_LABELS = ['33', '99', '∞']
 
-export default function TasbihCounter() {
+export default function TasbihCounter({ initialTarget }) {
   const { user } = useAuth()
 
   const [count, setCount] = useState(0)
-  const [target, setTarget] = useState(33)
+  const [target, setTarget] = useState(initialTarget ?? 33)
   const [total, setTotal] = useState(0)
   const [pulse, setPulse] = useState(false)
   const [reached, setReached] = useState(false)
