@@ -4,9 +4,9 @@ import { Activity } from 'lucide-react'
 
 function getLabel(pct) {
   if (pct >= 90) return { text: 'Excellent', color: 'text-emerald-600 dark:text-emerald-400' }
-  if (pct >= 70) return { text: 'Good', color: 'text-blue-600 dark:text-blue-400' }
-  if (pct >= 50) return { text: 'Needs improvement', color: 'text-amber-600 dark:text-amber-400' }
-  return { text: 'Keep going', color: 'text-zinc-500 dark:text-zinc-400' }
+  if (pct >= 75) return { text: 'Strong', color: 'text-blue-600 dark:text-blue-400' }
+  if (pct >= 60) return { text: 'Improving', color: 'text-amber-600 dark:text-amber-400' }
+  return { text: 'Needs focus', color: 'text-zinc-500 dark:text-zinc-400' }
 }
 
 export default function ConsistencyScore({ prayers, history }) {
