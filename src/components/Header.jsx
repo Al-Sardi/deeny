@@ -12,7 +12,7 @@ export default function Header({ streak, nextPrayer, nextPrayerTime, loading, er
       {/* Title row */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <img src="/logo.svg" alt="Deeny" className="h-9 w-9" />
+          <img src="/logo.png" alt="Deeny" className="h-9 w-9" />
           <h1 className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
             Deeny
           </h1>

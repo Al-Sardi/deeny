@@ -8,6 +8,8 @@ import {
   fetchPrayerStats,
   fetchTasbihTotal,
 } from '../lib/supabaseAchievements'
+import LevelCard from './LevelCard'
+import ConsistencyScore from './ConsistencyScore'
 
 const ACHIEVEMENTS = [
   { id: 'first-prayer', label: 'First Step', description: 'Complete your first prayer', icon: '🌱', check: (s) => s.totalPrayers >= 1 },
@@ -125,6 +127,10 @@ export default function StreaksTab({ prayers, streak, history }) {
           </motion.div>
         ))}
       </div>
+
+      {/* Level & Consistency */}
+      <LevelCard prayers={prayers} history={history} />
+      <ConsistencyScore prayers={prayers} history={history} />
 
       {/* Achievements */}
       <div>
