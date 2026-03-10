@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { Compass, Navigation, MapPin, AlertCircle } from 'lucide-react'
+import { Compass, MapPin, AlertCircle } from 'lucide-react'
 
 const KAABA_LAT = 21.4225
 const KAABA_LNG = 39.8262
@@ -179,19 +179,14 @@ export default function QiblaFinder() {
                   <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs font-medium text-zinc-400 dark:text-zinc-500">W</span>
                 </motion.div>
 
-                {/* Qibla arrow */}
+                {/* Qibla dot indicator */}
                 <motion.div
-                  className="absolute inset-0 flex items-center justify-center"
+                  className="absolute inset-0"
                   animate={{ rotate: arrowRotation ?? (qiblaBearing ?? 0) }}
                   transition={{ type: 'spring', stiffness: 120, damping: 20 }}
                 >
-                  <div className="flex h-full flex-col items-center pt-5">
-                    <Navigation
-                      size={24}
-                      className="text-emerald-500 drop-shadow-sm"
-                      strokeWidth={2}
-                      fill="currentColor"
-                    />
+                  <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
+                    <div className="h-4 w-4 rounded-full bg-emerald-500 shadow-md shadow-emerald-500/30" />
                   </div>
                 </motion.div>
 
