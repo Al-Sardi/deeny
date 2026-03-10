@@ -11,8 +11,8 @@ const tabs = [
 
 export default function BottomNav({ activeTab, onChangeTab }) {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 px-5 pb-5 pt-2">
-      <div className="mx-auto max-w-md rounded-2xl border border-zinc-200/70 bg-white/80 shadow-lg shadow-zinc-900/5 backdrop-blur-xl dark:border-zinc-800/70 dark:bg-zinc-900/80 dark:shadow-black/20">
+    <nav className="pointer-events-none fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-t from-zinc-50 via-zinc-50/80 to-transparent px-5 pb-5 pt-8 dark:from-zinc-950 dark:via-zinc-950/80">
+      <div className="pointer-events-auto mx-auto max-w-md rounded-2xl border border-zinc-200/70 bg-white shadow-lg shadow-zinc-900/5 dark:border-zinc-800/70 dark:bg-zinc-900 dark:shadow-black/20">
         <div className="flex items-center">
           {tabs.map(({ id, label, Icon }) => {
             const active = activeTab === id
