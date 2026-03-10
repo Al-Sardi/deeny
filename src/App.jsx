@@ -61,6 +61,35 @@ export default function App() {
   const { prayerTimes, nextPrayer, nextPrayerTime, loading, error } = usePrayerTimes()
 
   const saveTimerRef = useRef(null)
+  const latestRef = useRef({ prayers: defaultPrayers(), streak: 0 })
+  const dirtyRef = useRef(false)
+
+  // Always keep latestRef in sync so flush has current values
+  useEffect(() => {
+    latestRef.current = { prayers, streak }
+  })
+
+  // Flush pending save on page close / app switch
+  useEffect(() => {
+    function flush() {
+      if (dirtyRef.current) {
+        const { prayers: p, streak: s } = latestRef.current
+        // navigator.sendBeacon isn't available for Supabase, so fire-and-forget
+        upsertTodayPrayers(user.id, getToday(), p, s).catch(() => {})
+        dirtyRef.current = false
+      }
+    }
+
+    window.addEventListener('beforeunload', flush)
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') flush()
+    })
+
+    return () => {
+      window.removeEventListener('beforeunload', flush)
+      flush() // also flush on unmount
+    }
+  }, [user.id])
 
   useEffect(() => {
     let cancelled = false
@@ -143,10 +172,14 @@ export default function App() {
   useEffect(() => {
     if (dataLoading) return
 
+    dirtyRef.current = true
     clearTimeout(saveTimerRef.current)
     saveTimerRef.current = setTimeout(() => {
       upsertTodayPrayers(user.id, getToday(), prayers, streak)
-        .then(({ error }) => { if (error) console.error('Failed to save prayers:', error) })
+        .then(({ error }) => {
+          if (error) console.error('Failed to save prayers:', error)
+          else dirtyRef.current = false
+        })
     }, 500)
 
     return () => clearTimeout(saveTimerRef.current)
