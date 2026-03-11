@@ -5,6 +5,7 @@ import Login from './components/Login'
 import Signup from './components/Signup'
 import ProtectedRoute from './components/ProtectedRoute'
 import App from './App'
+import InstallPrompt from './components/InstallPrompt'
 
 /**
  * AppRouter — defines all routes.
@@ -24,33 +25,37 @@ export default function AppRouter() {
   }
 
   return (
-    <Routes>
-      {/* Public routes — redirect to /app if already logged in */}
-      <Route
-        path="/"
-        element={user ? <Navigate to="/app" replace /> : <LandingPage />}
-      />
-      <Route
-        path="/login"
-        element={user ? <Navigate to="/app" replace /> : <Login />}
-      />
-      <Route
-        path="/signup"
-        element={user ? <Navigate to="/app" replace /> : <Signup />}
-      />
+    <>
+      <Routes>
+        {/* Public routes — redirect to /app if already logged in */}
+        <Route
+          path="/"
+          element={user ? <Navigate to="/app" replace /> : <LandingPage />}
+        />
+        <Route
+          path="/login"
+          element={user ? <Navigate to="/app" replace /> : <Login />}
+        />
+        <Route
+          path="/signup"
+          element={user ? <Navigate to="/app" replace /> : <Signup />}
+        />
 
-      {/* Protected dashboard */}
-      <Route
-        path="/app"
-        element={
-          <ProtectedRoute>
-            <App />
-          </ProtectedRoute>
-        }
-      />
+        {/* Protected dashboard */}
+        <Route
+          path="/app"
+          element={
+            <ProtectedRoute>
+              <App />
+            </ProtectedRoute>
+          }
+        />
 
-      {/* Fallback — send unknown routes to landing */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        {/* Fallback — send unknown routes to landing */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+
+      <InstallPrompt />
+    </>
   )
 }
