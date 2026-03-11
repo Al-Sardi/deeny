@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Compass, CircleDot, BookOpenText, Star, ChevronRight } from 'lucide-react'
+import { Compass, CircleDot, BookOpenText, Star, BookOpen, ChevronRight } from 'lucide-react'
 import QiblaFinder from './QiblaFinder'
 import TasbihCounter from './TasbihCounter'
 import DhikrLibrary from './DhikrLibrary'
 import NamesOfAllah from './NamesOfAllah'
+import QuranReader from './QuranReader'
 
 const tools = [
+  { id: 'quran', label: 'Quran', desc: 'Read, listen & search', Icon: BookOpen },
   { id: 'qibla', label: 'Qibla Finder', desc: 'Find the direction of the Kaaba', Icon: Compass },
   { id: 'tasbih', label: 'Tasbih Counter', desc: 'Digital prayer bead counter', Icon: CircleDot },
   { id: 'dhikr', label: 'Dhikr Library', desc: 'Browse and recite adhkar', Icon: BookOpenText },
@@ -15,6 +17,10 @@ const tools = [
 
 export default function ToolsTab() {
   const [activeTool, setActiveTool] = useState(null)
+
+  if (activeTool === 'quran') {
+    return <QuranReader onBack={() => setActiveTool(null)} />
+  }
 
   if (activeTool === 'qibla') {
     return (
