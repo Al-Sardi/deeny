@@ -1,20 +1,21 @@
 import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { Flame, Zap, Activity } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 /* ── Level helpers (same logic as LevelCard) ── */
 
 const LEVELS = [
-  { level: 1,  xp: 0,    title: 'Seeker' },
-  { level: 2,  xp: 100,  title: 'Seeker' },
-  { level: 3,  xp: 300,  title: 'Consistent' },
-  { level: 4,  xp: 600,  title: 'Consistent' },
-  { level: 5,  xp: 1000, title: 'Devoted' },
-  { level: 6,  xp: 1500, title: 'Devoted' },
-  { level: 7,  xp: 2100, title: 'Disciplined' },
-  { level: 8,  xp: 2800, title: 'Disciplined' },
-  { level: 9,  xp: 3600, title: 'Disciplined' },
-  { level: 10, xp: 4500, title: 'Guardian of Salah' },
+  { level: 1,  xp: 0,    titleKey: 'progress.seeker' },
+  { level: 2,  xp: 100,  titleKey: 'progress.seeker' },
+  { level: 3,  xp: 300,  titleKey: 'progress.consistent' },
+  { level: 4,  xp: 600,  titleKey: 'progress.consistent' },
+  { level: 5,  xp: 1000, titleKey: 'progress.devoted' },
+  { level: 6,  xp: 1500, titleKey: 'progress.devoted' },
+  { level: 7,  xp: 2100, titleKey: 'progress.disciplined' },
+  { level: 8,  xp: 2800, titleKey: 'progress.disciplined' },
+  { level: 9,  xp: 3600, titleKey: 'progress.disciplined' },
+  { level: 10, xp: 4500, titleKey: 'progress.guardian' },
 ]
 
 function getLevelInfo(xp) {
@@ -45,10 +46,10 @@ function calculateXP(prayers, history) {
 /* ── Consistency helpers (same logic as ConsistencyScore) ── */
 
 function getConsistencyLabel(pct) {
-  if (pct >= 90) return { text: 'Excellent', color: 'text-emerald-600 dark:text-emerald-400' }
-  if (pct >= 75) return { text: 'Strong', color: 'text-blue-600 dark:text-blue-400' }
-  if (pct >= 60) return { text: 'Improving', color: 'text-amber-600 dark:text-amber-400' }
-  return { text: 'Needs focus', color: 'text-zinc-500 dark:text-zinc-400' }
+  if (pct >= 90) return { textKey: 'progress.excellent', color: 'text-emerald-600 dark:text-emerald-400' }
+  if (pct >= 75) return { textKey: 'progress.strong', color: 'text-blue-600 dark:text-blue-400' }
+  if (pct >= 60) return { textKey: 'progress.improving', color: 'text-amber-600 dark:text-amber-400' }
+  return { textKey: 'progress.needs_focus', color: 'text-zinc-500 dark:text-zinc-400' }
 }
 
 function calculateConsistency(prayers, history) {
@@ -75,10 +76,11 @@ function calculateConsistency(prayers, history) {
 /* ── Component ── */
 
 export default function ProgressOverview({ prayers, streak, history }) {
+  const { t } = useTranslation()
   const todayComplete = Object.values(prayers).filter(Boolean).length === 5
   const currentStreak = streak + (todayComplete ? 1 : 0)
 
-  const { level, title, xp, progress, next } = useMemo(() => {
+  const { level, titleKey, xp, progress, next } = useMemo(() => {
     const totalXP = calculateXP(prayers, history)
     const info = getLevelInfo(totalXP)
     return { xp: totalXP, ...info }
@@ -102,7 +104,7 @@ export default function ProgressOverview({ prayers, streak, history }) {
       className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
     >
       <h3 className="mb-5 text-sm font-medium text-zinc-500 dark:text-zinc-400">
-        Your Progress
+        {t('progress.your_progress')}
       </h3>
 
       {/* Three metrics in a row */}
@@ -116,7 +118,7 @@ export default function ProgressOverview({ prayers, streak, history }) {
             {currentStreak}
           </p>
           <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-            day streak
+            {t('progress.day_streak')}
           </p>
         </div>
 
@@ -129,7 +131,7 @@ export default function ProgressOverview({ prayers, streak, history }) {
             {level}
           </p>
           <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-            {title}
+            {t(titleKey)}
           </p>
         </div>
 
@@ -158,7 +160,7 @@ export default function ProgressOverview({ prayers, streak, history }) {
             {percentage}%
           </p>
           <p className={`text-[11px] ${label.color}`}>
-            {label.text}
+            {t(label.textKey)}
           </p>
         </div>
       </div>
@@ -168,10 +170,10 @@ export default function ProgressOverview({ prayers, streak, history }) {
         <div className="mt-5">
           <div className="mb-1 flex items-center justify-between">
             <span className="text-[11px] tabular-nums text-zinc-400 dark:text-zinc-500">
-              {xp.toLocaleString()} XP
+              {xp.toLocaleString()} {t('progress.xp')}
             </span>
             <span className="text-[11px] tabular-nums text-zinc-400 dark:text-zinc-500">
-              Level {next.level}
+              {t('progress.level')} {next.level}
             </span>
           </div>
           <div className="h-1.5 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">

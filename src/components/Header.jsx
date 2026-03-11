@@ -1,7 +1,10 @@
 import { motion } from 'framer-motion'
 import { Flame, Clock } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 export default function Header({ streak, nextPrayer, nextPrayerTime, loading, error }) {
+  const { t } = useTranslation()
+
   return (
     <motion.header
       initial={{ opacity: 0, y: -8 }}
@@ -33,7 +36,7 @@ export default function Header({ streak, nextPrayer, nextPrayerTime, loading, er
       {loading && (
         <div className="flex items-center gap-2">
           <div className="h-3.5 w-3.5 animate-spin rounded-full border-[1.5px] border-zinc-300 border-t-transparent dark:border-zinc-600" />
-          <span className="text-sm text-zinc-400 dark:text-zinc-500">Loading prayer times…</span>
+          <span className="text-sm text-zinc-400 dark:text-zinc-500">{t('header.loading_prayer_times')}</span>
         </div>
       )}
 
@@ -45,15 +48,15 @@ export default function Header({ streak, nextPrayer, nextPrayerTime, loading, er
         <div className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
           <Clock size={14} strokeWidth={1.5} />
           <span>
-            Next: <span className="font-medium text-zinc-900 dark:text-zinc-100">{nextPrayer}</span>
-            {' '}at{' '}
+            {t('header.next')} <span className="font-medium text-zinc-900 dark:text-zinc-100">{nextPrayer}</span>
+            {' '}{t('header.at')}{' '}
             <span className="font-medium text-emerald-600 dark:text-emerald-400">{nextPrayerTime}</span>
           </span>
         </div>
       )}
 
       {!loading && !error && !nextPrayer && nextPrayer !== undefined && (
-        <p className="text-sm text-zinc-400 dark:text-zinc-500">All prayers passed for today</p>
+        <p className="text-sm text-zinc-400 dark:text-zinc-500">{t('header.all_prayers_passed')}</p>
       )}
     </motion.header>
   )

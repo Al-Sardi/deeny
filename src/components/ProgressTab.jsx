@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import ProgressOverview from './ProgressOverview'
 import PrayerHeatmap from './PrayerHeatmap'
 import PrayerCalendar from './PrayerCalendar'
@@ -9,6 +10,7 @@ import Achievements from './Achievements'
 import CollapsibleCard from './CollapsibleCard'
 
 export default function ProgressTab({ prayers, streak, history }) {
+  const { t } = useTranslation()
   const [expandedCard, setExpandedCard] = useState(null)
 
   const toggleCard = (id) =>
@@ -23,7 +25,7 @@ export default function ProgressTab({ prayers, streak, history }) {
           animate={{ opacity: 1 }}
           className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500"
         >
-          Overview
+          {t('progress.overview')}
         </motion.p>
         <ProgressOverview prayers={prayers} streak={streak} history={history} />
       </section>
@@ -36,7 +38,7 @@ export default function ProgressTab({ prayers, streak, history }) {
           transition={{ delay: 0.05 }}
           className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500"
         >
-          Prayer Activity
+          {t('progress.prayer_activity')}
         </motion.p>
         <div className="space-y-4">
           <PrayerHeatmap prayers={prayers} history={history} />
@@ -52,12 +54,12 @@ export default function ProgressTab({ prayers, streak, history }) {
           transition={{ delay: 0.1 }}
           className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500"
         >
-          Statistics
+          {t('progress.statistics')}
         </motion.p>
         <div className="space-y-3">
           <CollapsibleCard
-            title="Prayer Journey"
-            icon="🕌"
+            title={t('progress.prayer_journey')}
+            icon="\ud83d\udd4c"
             expanded={expandedCard === 'journey'}
             onToggle={() => toggleCard('journey')}
           >
@@ -65,8 +67,8 @@ export default function ProgressTab({ prayers, streak, history }) {
           </CollapsibleCard>
 
           <CollapsibleCard
-            title="Weekly Stats"
-            icon="📊"
+            title={t('progress.weekly_stats')}
+            icon="\ud83d\udcca"
             expanded={expandedCard === 'weekly'}
             onToggle={() => toggleCard('weekly')}
           >
@@ -74,8 +76,8 @@ export default function ProgressTab({ prayers, streak, history }) {
           </CollapsibleCard>
 
           <CollapsibleCard
-            title="Achievements"
-            icon="🏆"
+            title={t('progress.achievements')}
+            icon="\ud83c\udfc6"
             expanded={expandedCard === 'achievements'}
             onToggle={() => toggleCard('achievements')}
           >

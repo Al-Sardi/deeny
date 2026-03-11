@@ -1,0 +1,120 @@
+{
+  "nav": {
+    "home": "Start",
+    "progress": "Fortschritt",
+    "tools": "Tools",
+    "settings": "Einstellungen"
+  },
+  "header": {
+    "loading_prayer_times": "Gebetszeiten laden\u2026",
+    "next": "N\u00e4chstes:",
+    "at": "um",
+    "all_prayers_passed": "Alle Gebete sind f\u00fcr heute vorbei"
+  },
+  "prayers": {
+    "fajr": "Fajr",
+    "dhuhr": "Dhuhr",
+    "asr": "Asr",
+    "maghrib": "Maghrib",
+    "isha": "Isha",
+    "reset_today": "Heute zur\u00fccksetzen"
+  },
+  "progress_bar": {
+    "todays_progress": "Heutiger Fortschritt",
+    "all_completed": "Alle Gebete erledigt \u2713"
+  },
+  "daily_ayah": {
+    "loading": "Vers wird geladen\u2026",
+    "unavailable": "Nicht verf\u00fcgbar",
+    "error": "Tagesvers konnte nicht geladen werden."
+  },
+  "progress": {
+    "overview": "\u00dcbersicht",
+    "prayer_activity": "Gebetsaktivit\u00e4t",
+    "statistics": "Statistiken",
+    "prayer_journey": "Gebetsreise",
+    "weekly_stats": "Wochenstatistik",
+    "achievements": "Erfolge",
+    "your_progress": "Dein Fortschritt",
+    "day_streak": "Tage-Streak",
+    "xp": "XP",
+    "level": "Level",
+    "seeker": "Suchender",
+    "consistent": "Best\u00e4ndig",
+    "devoted": "Hingegeben",
+    "disciplined": "Diszipliniert",
+    "guardian": "H\u00fcter des Gebets",
+    "excellent": "Ausgezeichnet",
+    "strong": "Stark",
+    "improving": "Verbessernd",
+    "needs_focus": "Braucht Fokus"
+  },
+  "tools": {
+    "quran": "Quran",
+    "quran_desc": "Lesen, h\u00f6ren & suchen",
+    "qibla": "Qibla-Finder",
+    "qibla_desc": "Finde die Richtung der Kaaba",
+    "tasbih": "Tasbih-Z\u00e4hler",
+    "tasbih_desc": "Digitaler Gebetsketten-Z\u00e4hler",
+    "dhikr": "Dhikr-Bibliothek",
+    "dhikr_desc": "Adhkar durchsuchen und rezitieren",
+    "names": "99 Namen Allahs",
+    "names_desc": "Asma ul-Husna",
+    "back": "Zur\u00fcck zu Tools"
+  },
+  "settings": {
+    "account": "Konto",
+    "email": "E-Mail",
+    "not_signed_in": "Nicht angemeldet",
+    "signing_out": "Abmelden\u2026",
+    "sign_out": "Abmelden",
+    "preferences": "Einstellungen",
+    "dark_mode": "Dunkelmodus",
+    "on": "An",
+    "off": "Aus",
+    "language": "Sprache"
+  },
+  "install": {
+    "title": "Deeny installieren",
+    "subtitle": "F\u00fcge Deeny zu deinem Homescreen hinzu",
+    "button": "Installieren",
+    "close": "Schlie\u00dfen"
+  },
+  "landing": {
+    "tagline": "Baue deinen Deen auf \u2013 Gebet f\u00fcr Gebet.",
+    "get_started": "Jetzt starten",
+    "login": "Anmelden",
+    "everything_you_need": "Alles was du brauchst",
+    "prayer_tracking": "Gebetstracking",
+    "prayer_tracking_desc": "Verfolge alle f\u00fcnf t\u00e4glichen Gebete mit einem Tipp.",
+    "streak_motivation": "Streak-Motivation",
+    "streak_motivation_desc": "Baue Konstanz auf mit t\u00e4glichen Streaks und Erfolgen.",
+    "monthly_calendar": "Monatskalender",
+    "monthly_calendar_desc": "Visualisiere deine Gebetshistorie in einem farbcodierten Kalender.",
+    "daily_ayah": "Tagesvers",
+    "daily_ayah_desc": "Starte jeden Tag mit einem Vers aus dem Quran.",
+    "footer": "Deeny \u2014 Dein t\u00e4glicher Begleiter f\u00fcr Salah."
+  },
+  "auth": {
+    "welcome_back": "Willkommen zur\u00fcck",
+    "email_label": "E-Mail",
+    "email_placeholder": "du@beispiel.de",
+    "password_label": "Passwort",
+    "password_placeholder": "Dein Passwort",
+    "signing_in": "Anmelden\u2026",
+    "sign_in": "Anmelden",
+    "no_account": "Noch kein Konto?",
+    "sign_up": "Registrieren",
+    "create_account": "Konto erstellen",
+    "password_min": "Mind. 6 Zeichen",
+    "creating_account": "Konto wird erstellt\u2026",
+    "have_account": "Bereits ein Konto?",
+    "check_email": "Pr\u00fcfe deine E-Mail",
+    "confirmation_sent": "Wir haben einen Best\u00e4tigungslink gesendet an",
+    "go_to_login": "Zum Login",
+    "password_too_short": "Das Passwort muss mindestens 6 Zeichen lang sein.",
+    "backend_error": "Backend ist nicht konfiguriert. Bitte setze die Supabase-Umgebungsvariablen.",
+    "account_exists": "Ein Konto mit dieser E-Mail existiert bereits.",
+    "connection_error": "Verbindung zum Server nicht m\u00f6glich. Bitte pr\u00fcfe deine Verbindung."
+  }
+}

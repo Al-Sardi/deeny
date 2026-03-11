@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Check } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 import { isSupabaseConfigured } from '../lib/supabase'
 
 export default function Signup() {
+  const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState(null)
@@ -19,13 +21,13 @@ export default function Signup() {
     setLoading(true)
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters.')
+      setError(t('auth.password_too_short'))
       setLoading(false)
       return
     }
 
     if (!isSupabaseConfigured) {
-      setError('Backend is not configured. Please set the Supabase environment variables.')
+      setError(t('auth.backend_error'))
       setLoading(false)
       return
     }
@@ -37,7 +39,7 @@ export default function Signup() {
         setError(err.message)
         setLoading(false)
       } else if (data?.user?.identities?.length === 0) {
-        setError('An account with this email already exists.')
+        setError(t('auth.account_exists'))
         setLoading(false)
       } else {
         if (data?.session) {
@@ -48,7 +50,7 @@ export default function Signup() {
         }
       }
     } catch {
-      setError('Unable to connect to the server. Please check your connection and try again.')
+      setError(t('auth.connection_error'))
       setLoading(false)
     }
   }
@@ -60,15 +62,15 @@ export default function Signup() {
           <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/40">
             <Check size={28} className="text-emerald-600 dark:text-emerald-400" strokeWidth={2.5} />
           </div>
-          <h2 className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">Check your email</h2>
+          <h2 className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">{t('auth.check_email')}</h2>
           <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-            We sent a confirmation link to <strong className="text-zinc-700 dark:text-zinc-200">{email}</strong>.
+            {t('auth.confirmation_sent')} <strong className="text-zinc-700 dark:text-zinc-200">{email}</strong>.
           </p>
           <Link
             to="/login"
             className="mt-8 inline-block rounded-xl bg-emerald-600 px-7 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700"
           >
-            Go to login
+            {t('auth.go_to_login')}
           </Link>
         </div>
       </div>
@@ -85,7 +87,7 @@ export default function Signup() {
 
         <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
           <h2 className="mb-5 text-center text-base font-medium text-zinc-900 dark:text-zinc-100">
-            Create your account
+            {t('auth.create_account')}
           </h2>
 
           {error && (
@@ -96,25 +98,25 @@ export default function Signup() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="mb-1.5 block text-sm text-zinc-600 dark:text-zinc-400">Email</label>
+              <label className="mb-1.5 block text-sm text-zinc-600 dark:text-zinc-400">{t('auth.email_label')}</label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500"
-                placeholder="you@example.com"
+                placeholder={t('auth.email_placeholder')}
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm text-zinc-600 dark:text-zinc-400">Password</label>
+              <label className="mb-1.5 block text-sm text-zinc-600 dark:text-zinc-400">{t('auth.password_label')}</label>
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500"
-                placeholder="Min. 6 characters"
+                placeholder={t('auth.password_min')}
               />
             </div>
             <button
@@ -122,15 +124,15 @@ export default function Signup() {
               disabled={loading}
               className="mt-1 w-full rounded-xl bg-emerald-600 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 active:scale-[0.98] disabled:opacity-50"
             >
-              {loading ? 'Creating account…' : 'Sign up'}
+              {loading ? t('auth.creating_account') : t('auth.sign_up')}
             </button>
           </form>
         </div>
 
         <p className="mt-5 text-center text-sm text-zinc-500 dark:text-zinc-400">
-          Already have an account?{' '}
+          {t('auth.have_account')}{' '}
           <Link to="/login" className="font-medium text-emerald-600 hover:text-emerald-700 dark:text-emerald-400">
-            Sign in
+            {t('auth.sign_in')}
           </Link>
         </p>
       </div>

@@ -1,0 +1,120 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "progress": "Progreso",
+    "tools": "Herramientas",
+    "settings": "Ajustes"
+  },
+  "header": {
+    "loading_prayer_times": "Cargando horarios de oraci\u00f3n\u2026",
+    "next": "Siguiente:",
+    "at": "a las",
+    "all_prayers_passed": "Todas las oraciones han pasado hoy"
+  },
+  "prayers": {
+    "fajr": "Fajr",
+    "dhuhr": "Dhuhr",
+    "asr": "Asr",
+    "maghrib": "Maghrib",
+    "isha": "Isha",
+    "reset_today": "Reiniciar hoy"
+  },
+  "progress_bar": {
+    "todays_progress": "Progreso de hoy",
+    "all_completed": "Todas las oraciones completadas \u2713"
+  },
+  "daily_ayah": {
+    "loading": "Cargando vers\u00edculo\u2026",
+    "unavailable": "No disponible",
+    "error": "No se pudo cargar el vers\u00edculo diario."
+  },
+  "progress": {
+    "overview": "Resumen",
+    "prayer_activity": "Actividad de oraci\u00f3n",
+    "statistics": "Estad\u00edsticas",
+    "prayer_journey": "Recorrido de oraci\u00f3n",
+    "weekly_stats": "Estad\u00edsticas semanales",
+    "achievements": "Logros",
+    "your_progress": "Tu progreso",
+    "day_streak": "d\u00edas seguidos",
+    "xp": "XP",
+    "level": "Nivel",
+    "seeker": "Buscador",
+    "consistent": "Constante",
+    "devoted": "Devoto",
+    "disciplined": "Disciplinado",
+    "guardian": "Guardi\u00e1n del Salah",
+    "excellent": "Excelente",
+    "strong": "Fuerte",
+    "improving": "Mejorando",
+    "needs_focus": "Necesita enfoque"
+  },
+  "tools": {
+    "quran": "Cor\u00e1n",
+    "quran_desc": "Leer, escuchar y buscar",
+    "qibla": "Buscador de Qibla",
+    "qibla_desc": "Encuentra la direcci\u00f3n de la Kaaba",
+    "tasbih": "Contador Tasbih",
+    "tasbih_desc": "Contador digital de cuentas de oraci\u00f3n",
+    "dhikr": "Biblioteca Dhikr",
+    "dhikr_desc": "Explorar y recitar adhkar",
+    "names": "99 Nombres de Allah",
+    "names_desc": "Asma ul-Husna",
+    "back": "Volver a Herramientas"
+  },
+  "settings": {
+    "account": "Cuenta",
+    "email": "Correo",
+    "not_signed_in": "No conectado",
+    "signing_out": "Cerrando sesi\u00f3n\u2026",
+    "sign_out": "Cerrar sesi\u00f3n",
+    "preferences": "Preferencias",
+    "dark_mode": "Modo oscuro",
+    "on": "Activado",
+    "off": "Desactivado",
+    "language": "Idioma"
+  },
+  "install": {
+    "title": "Instalar Deeny",
+    "subtitle": "A\u00f1ade Deeny a tu pantalla de inicio",
+    "button": "Instalar",
+    "close": "Cerrar"
+  },
+  "landing": {
+    "tagline": "Construye tu Deen una oraci\u00f3n a la vez.",
+    "get_started": "Comenzar",
+    "login": "Iniciar sesi\u00f3n",
+    "everything_you_need": "Todo lo que necesitas",
+    "prayer_tracking": "Seguimiento de oraciones",
+    "prayer_tracking_desc": "Registra tus cinco oraciones diarias con un solo toque.",
+    "streak_motivation": "Motivaci\u00f3n de racha",
+    "streak_motivation_desc": "Construye constancia con rachas diarias y logros.",
+    "monthly_calendar": "Calendario mensual",
+    "monthly_calendar_desc": "Visualiza tu historial de oraciones en un calendario con colores.",
+    "daily_ayah": "Vers\u00edculo diario",
+    "daily_ayah_desc": "Comienza cada d\u00eda con un vers\u00edculo del Cor\u00e1n.",
+    "footer": "Deeny \u2014 Tu compa\u00f1ero diario para el Salah."
+  },
+  "auth": {
+    "welcome_back": "Bienvenido de nuevo",
+    "email_label": "Correo",
+    "email_placeholder": "tu@ejemplo.com",
+    "password_label": "Contrase\u00f1a",
+    "password_placeholder": "Tu contrase\u00f1a",
+    "signing_in": "Iniciando sesi\u00f3n\u2026",
+    "sign_in": "Iniciar sesi\u00f3n",
+    "no_account": "\u00bfNo tienes cuenta?",
+    "sign_up": "Registrarse",
+    "create_account": "Crea tu cuenta",
+    "password_min": "M\u00edn. 6 caracteres",
+    "creating_account": "Creando cuenta\u2026",
+    "have_account": "\u00bfYa tienes cuenta?",
+    "check_email": "Revisa tu correo",
+    "confirmation_sent": "Enviamos un enlace de confirmaci\u00f3n a",
+    "go_to_login": "Ir al login",
+    "password_too_short": "La contrase\u00f1a debe tener al menos 6 caracteres.",
+    "backend_error": "El backend no est\u00e1 configurado. Configura las variables de entorno de Supabase.",
+    "account_exists": "Ya existe una cuenta con este correo.",
+    "connection_error": "No se pudo conectar al servidor. Verifica tu conexi\u00f3n."
+  }
+}

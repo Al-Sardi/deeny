@@ -1,10 +1,18 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Mail, Moon, LogOut, ChevronRight } from 'lucide-react'
+import { Mail, Moon, LogOut, ChevronRight, Globe } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 
+const LANGUAGES = [
+  { code: 'en', label: 'English' },
+  { code: 'de', label: 'Deutsch' },
+  { code: 'es', label: 'Espa\u00f1ol' },
+]
+
 export default function SettingsTab({ dark, onToggleTheme }) {
+  const { t, i18n } = useTranslation()
   const { user, signOut } = useAuth()
   const navigate = useNavigate()
   const [loggingOut, setLoggingOut] = useState(false)
@@ -24,15 +32,15 @@ export default function SettingsTab({ dark, onToggleTheme }) {
     >
       {/* Account */}
       <section>
-        <h2 className="mb-2 px-1 text-sm font-medium text-zinc-500 dark:text-zinc-400">Account</h2>
+        <h2 className="mb-2 px-1 text-sm font-medium text-zinc-500 dark:text-zinc-400">{t('settings.account')}</h2>
         <div className="rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
           {/* Email row */}
           <div className="flex items-center gap-3 border-b border-zinc-100 px-5 py-4 dark:border-zinc-800">
             <Mail size={16} className="text-zinc-400 dark:text-zinc-500" strokeWidth={1.5} />
             <div className="min-w-0 flex-1">
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">Email</p>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">{t('settings.email')}</p>
               <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                {user?.email ?? 'Not signed in'}
+                {user?.email ?? t('settings.not_signed_in')}
               </p>
             </div>
           </div>
@@ -45,7 +53,7 @@ export default function SettingsTab({ dark, onToggleTheme }) {
           >
             <LogOut size={16} className="text-red-500" strokeWidth={1.5} />
             <span className="flex-1 text-left text-sm font-medium text-red-600 dark:text-red-400">
-              {loggingOut ? 'Signing out…' : 'Sign out'}
+              {loggingOut ? t('settings.signing_out') : t('settings.sign_out')}
             </span>
             <ChevronRight size={14} className="text-zinc-300 dark:text-zinc-700" />
           </button>
@@ -54,14 +62,15 @@ export default function SettingsTab({ dark, onToggleTheme }) {
 
       {/* Preferences */}
       <section>
-        <h2 className="mb-2 px-1 text-sm font-medium text-zinc-500 dark:text-zinc-400">Preferences</h2>
+        <h2 className="mb-2 px-1 text-sm font-medium text-zinc-500 dark:text-zinc-400">{t('settings.preferences')}</h2>
         <div className="rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-          <div className="flex items-center gap-3 px-5 py-4">
+          {/* Dark mode row */}
+          <div className="flex items-center gap-3 border-b border-zinc-100 px-5 py-4 dark:border-zinc-800">
             <Moon size={16} className="text-zinc-400 dark:text-zinc-500" strokeWidth={1.5} />
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Dark mode</p>
+              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{t('settings.dark_mode')}</p>
               <p className="text-xs text-zinc-400 dark:text-zinc-500">
-                {dark ? 'On' : 'Off'}
+                {dark ? t('settings.on') : t('settings.off')}
               </p>
             </div>
             <button
@@ -78,6 +87,29 @@ export default function SettingsTab({ dark, onToggleTheme }) {
                   ${dark ? 'ml-[21px]' : 'ml-[3px]'}`}
               />
             </button>
+          </div>
+
+          {/* Language row */}
+          <div className="flex items-center gap-3 px-5 py-4">
+            <Globe size={16} className="text-zinc-400 dark:text-zinc-500" strokeWidth={1.5} />
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{t('settings.language')}</p>
+            </div>
+            <div className="flex gap-1 rounded-xl bg-zinc-100 p-0.5 dark:bg-zinc-800">
+              {LANGUAGES.map(({ code, label }) => (
+                <button
+                  key={code}
+                  onClick={() => i18n.changeLanguage(code)}
+                  className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-200
+                    ${i18n.language === code
+                      ? 'bg-white text-emerald-700 shadow-sm dark:bg-zinc-700 dark:text-emerald-400'
+                      : 'text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200'
+                    }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </section>

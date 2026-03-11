@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 
 export default function ProgressBar({ completed, total }) {
+  const { t } = useTranslation()
   const pct = Math.round((completed / total) * 100)
   const done = completed === total
 
@@ -12,7 +14,7 @@ export default function ProgressBar({ completed, total }) {
       className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
     >
       <div className="mb-3 flex items-baseline justify-between">
-        <span className="text-sm text-zinc-500 dark:text-zinc-400">Today&apos;s progress</span>
+        <span className="text-sm text-zinc-500 dark:text-zinc-400">{t('progress_bar.todays_progress')}</span>
         <span className={`text-sm tabular-nums ${done ? 'font-semibold text-emerald-600 dark:text-emerald-400' : 'text-zinc-500 dark:text-zinc-400'}`}>
           {completed}/{total}
         </span>
@@ -34,7 +36,7 @@ export default function ProgressBar({ completed, total }) {
           transition={{ delay: 0.5 }}
           className="mt-3 text-center text-sm font-medium text-emerald-600 dark:text-emerald-400"
         >
-          All prayers completed ✓
+          {t('progress_bar.all_completed')}
         </motion.p>
       )}
     </motion.div>

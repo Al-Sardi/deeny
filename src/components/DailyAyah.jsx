@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { BookOpen } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 const AYAH_KEY = 'daily-ayah'
 const API_URL = 'https://api.alquran.cloud/v1/ayah/random/en.asad'
@@ -22,6 +23,7 @@ function cacheAyah(ayah) {
 }
 
 export default function DailyAyah() {
+  const { t } = useTranslation()
   const [ayah, setAyah] = useState(loadCachedAyah)
   const [loading, setLoading] = useState(() => loadCachedAyah() === null)
   const [error, setError] = useState(null)
@@ -47,7 +49,7 @@ export default function DailyAyah() {
           setAyah(result)
         }
       } catch {
-        if (!cancelled) setError('Could not load daily ayah.')
+        if (!cancelled) setError(t('daily_ayah.error'))
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -55,7 +57,7 @@ export default function DailyAyah() {
 
     fetchAyah()
     return () => { cancelled = true }
-  }, [ayah])
+  }, [ayah, t])
 
   const card = 'mb-6 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900'
 
@@ -64,7 +66,7 @@ export default function DailyAyah() {
       <div className={card}>
         <div className="flex items-center justify-center gap-2">
           <div className="h-3.5 w-3.5 animate-spin rounded-full border-[1.5px] border-zinc-300 border-t-transparent dark:border-zinc-600" />
-          <span className="text-sm text-zinc-400 dark:text-zinc-500">Loading verse…</span>
+          <span className="text-sm text-zinc-400 dark:text-zinc-500">{t('daily_ayah.loading')}</span>
         </div>
       </div>
     )
@@ -73,7 +75,7 @@ export default function DailyAyah() {
   if (error || !ayah) {
     return (
       <div className={card}>
-        <p className="text-center text-sm text-zinc-400 dark:text-zinc-500">{error ?? 'Unavailable'}</p>
+        <p className="text-center text-sm text-zinc-400 dark:text-zinc-500">{error ?? t('daily_ayah.unavailable')}</p>
       </div>
     )
   }

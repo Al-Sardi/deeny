@@ -1,15 +1,18 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { CheckCircle2, Flame, Calendar, BookOpen } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 const features = [
-  { title: 'Prayer Tracking', desc: 'Track all five daily prayers with a single tap.', Icon: CheckCircle2 },
-  { title: 'Streak Motivation', desc: 'Build consistency with daily streaks and achievements.', Icon: Flame },
-  { title: 'Monthly Calendar', desc: 'Visualise your prayer history in a color-coded calendar.', Icon: Calendar },
-  { title: 'Daily Ayah', desc: 'Start each day with a verse from the Quran.', Icon: BookOpen },
+  { titleKey: 'landing.prayer_tracking', descKey: 'landing.prayer_tracking_desc', Icon: CheckCircle2 },
+  { titleKey: 'landing.streak_motivation', descKey: 'landing.streak_motivation_desc', Icon: Flame },
+  { titleKey: 'landing.monthly_calendar', descKey: 'landing.monthly_calendar_desc', Icon: Calendar },
+  { titleKey: 'landing.daily_ayah', descKey: 'landing.daily_ayah_desc', Icon: BookOpen },
 ]
 
 export default function LandingPage() {
+  const { t } = useTranslation()
+
   return (
     <div className="flex min-h-dvh flex-col bg-zinc-50 dark:bg-zinc-950">
       {/* Hero */}
@@ -31,7 +34,7 @@ export default function LandingPage() {
           transition={{ delay: 0.25 }}
           className="mt-3 max-w-xs text-lg text-zinc-500 dark:text-zinc-400"
         >
-          Build your Deen one prayer at a time.
+          {t('landing.tagline')}
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 8 }}
@@ -43,13 +46,13 @@ export default function LandingPage() {
             to="/signup"
             className="rounded-xl bg-emerald-600 px-7 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 active:scale-[0.97]"
           >
-            Get Started
+            {t('landing.get_started')}
           </Link>
           <Link
             to="/login"
             className="rounded-xl border border-zinc-200 bg-white px-7 py-3 text-sm font-semibold text-zinc-700 shadow-sm transition hover:bg-zinc-50 active:scale-[0.97] dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
           >
-            Login
+            {t('landing.login')}
           </Link>
         </motion.div>
       </section>
@@ -57,12 +60,12 @@ export default function LandingPage() {
       {/* Features */}
       <section className="border-t border-zinc-200 bg-white px-6 py-20 dark:border-zinc-800 dark:bg-zinc-900">
         <h2 className="mb-10 text-center text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-          Everything you need
+          {t('landing.everything_you_need')}
         </h2>
         <div className="mx-auto grid max-w-lg gap-4">
           {features.map((f, i) => (
             <motion.div
-              key={f.title}
+              key={f.titleKey}
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -73,8 +76,8 @@ export default function LandingPage() {
                 <f.Icon size={20} strokeWidth={1.5} />
               </div>
               <div>
-                <h3 className="text-base font-medium text-zinc-900 dark:text-zinc-100">{f.title}</h3>
-                <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">{f.desc}</p>
+                <h3 className="text-base font-medium text-zinc-900 dark:text-zinc-100">{t(f.titleKey)}</h3>
+                <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">{t(f.descKey)}</p>
               </div>
             </motion.div>
           ))}
@@ -82,7 +85,7 @@ export default function LandingPage() {
       </section>
 
       <footer className="border-t border-zinc-200 bg-white py-8 text-center text-xs text-zinc-400 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-500">
-        Deeny &mdash; Your daily companion for Salah.
+        {t('landing.footer')}
       </footer>
     </div>
   )

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Compass, CircleDot, BookOpenText, Star, BookOpen, ChevronRight } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import QiblaFinder from './QiblaFinder'
 import TasbihCounter from './TasbihCounter'
 import DhikrLibrary from './DhikrLibrary'
@@ -8,14 +9,27 @@ import NamesOfAllah from './NamesOfAllah'
 import QuranReader from './QuranReader'
 
 const tools = [
-  { id: 'quran', label: 'Quran', desc: 'Read, listen & search', Icon: BookOpen },
-  { id: 'qibla', label: 'Qibla Finder', desc: 'Find the direction of the Kaaba', Icon: Compass },
-  { id: 'tasbih', label: 'Tasbih Counter', desc: 'Digital prayer bead counter', Icon: CircleDot },
-  { id: 'dhikr', label: 'Dhikr Library', desc: 'Browse and recite adhkar', Icon: BookOpenText },
-  { id: 'names', label: '99 Names of Allah', desc: 'Asma ul-Husna', Icon: Star },
+  { id: 'quran', labelKey: 'tools.quran', descKey: 'tools.quran_desc', Icon: BookOpen },
+  { id: 'qibla', labelKey: 'tools.qibla', descKey: 'tools.qibla_desc', Icon: Compass },
+  { id: 'tasbih', labelKey: 'tools.tasbih', descKey: 'tools.tasbih_desc', Icon: CircleDot },
+  { id: 'dhikr', labelKey: 'tools.dhikr', descKey: 'tools.dhikr_desc', Icon: BookOpenText },
+  { id: 'names', labelKey: 'tools.names', descKey: 'tools.names_desc', Icon: Star },
 ]
 
+function BackButton({ onClick, t }) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex items-center gap-1 text-sm font-medium text-emerald-600 transition hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
+    >
+      <ChevronRight size={16} className="rotate-180" strokeWidth={2} />
+      {t('tools.back')}
+    </button>
+  )
+}
+
 export default function ToolsTab() {
+  const { t } = useTranslation()
   const [activeTool, setActiveTool] = useState(null)
 
   if (activeTool === 'quran') {
@@ -25,13 +39,7 @@ export default function ToolsTab() {
   if (activeTool === 'qibla') {
     return (
       <div className="space-y-4">
-        <button
-          onClick={() => setActiveTool(null)}
-          className="flex items-center gap-1 text-sm font-medium text-emerald-600 transition hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
-        >
-          <ChevronRight size={16} className="rotate-180" strokeWidth={2} />
-          Back to Tools
-        </button>
+        <BackButton onClick={() => setActiveTool(null)} t={t} />
         <QiblaFinder />
       </div>
     )
@@ -40,13 +48,7 @@ export default function ToolsTab() {
   if (activeTool === 'tasbih') {
     return (
       <div className="space-y-4">
-        <button
-          onClick={() => setActiveTool(null)}
-          className="flex items-center gap-1 text-sm font-medium text-emerald-600 transition hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
-        >
-          <ChevronRight size={16} className="rotate-180" strokeWidth={2} />
-          Back to Tools
-        </button>
+        <BackButton onClick={() => setActiveTool(null)} t={t} />
         <TasbihCounter />
       </div>
     )
@@ -59,13 +61,7 @@ export default function ToolsTab() {
   if (activeTool === 'names') {
     return (
       <div className="space-y-4">
-        <button
-          onClick={() => setActiveTool(null)}
-          className="flex items-center gap-1 text-sm font-medium text-emerald-600 transition hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
-        >
-          <ChevronRight size={16} className="rotate-180" strokeWidth={2} />
-          Back to Tools
-        </button>
+        <BackButton onClick={() => setActiveTool(null)} t={t} />
         <NamesOfAllah />
       </div>
     )
@@ -73,7 +69,7 @@ export default function ToolsTab() {
 
   return (
     <div className="space-y-3">
-      {tools.map(({ id, label, desc, Icon }, i) => (
+      {tools.map(({ id, labelKey, descKey, Icon }, i) => (
         <motion.button
           key={id}
           initial={{ opacity: 0, y: 8 }}
@@ -86,8 +82,8 @@ export default function ToolsTab() {
             <Icon size={20} className="text-emerald-600 dark:text-emerald-400" strokeWidth={1.5} />
           </div>
           <div className="flex-1 text-left">
-            <p className="text-base font-medium text-zinc-900 dark:text-zinc-100">{label}</p>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">{desc}</p>
+            <p className="text-base font-medium text-zinc-900 dark:text-zinc-100">{t(labelKey)}</p>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">{t(descKey)}</p>
           </div>
           <ChevronRight size={18} className="text-zinc-300 dark:text-zinc-600" strokeWidth={1.5} />
         </motion.button>

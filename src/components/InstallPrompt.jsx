@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Download, X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 const DISMISSED_KEY = 'pwa-install-dismissed'
 
 export default function InstallPrompt() {
+  const { t } = useTranslation()
   const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [visible, setVisible] = useState(false)
 
@@ -62,21 +64,21 @@ export default function InstallPrompt() {
           <div className="flex items-center gap-3 rounded-2xl bg-emerald-600 px-4 py-3 text-white shadow-lg shadow-emerald-600/25">
             <Download className="h-5 w-5 shrink-0" />
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold">Deeny installieren</p>
+              <p className="text-sm font-semibold">{t('install.title')}</p>
               <p className="text-xs text-emerald-100">
-                Füge Deeny zu deinem Homescreen hinzu
+                {t('install.subtitle')}
               </p>
             </div>
             <button
               onClick={handleInstall}
               className="shrink-0 rounded-xl bg-white px-3.5 py-1.5 text-sm font-semibold text-emerald-700 transition-colors active:bg-emerald-50"
             >
-              Installieren
+              {t('install.button')}
             </button>
             <button
               onClick={handleDismiss}
               className="shrink-0 rounded-full p-1 transition-colors hover:bg-emerald-500 active:bg-emerald-500"
-              aria-label="Schließen"
+              aria-label={t('install.close')}
             >
               <X className="h-4 w-4" />
             </button>

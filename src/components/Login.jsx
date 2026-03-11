@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 import { isSupabaseConfigured } from '../lib/supabase'
 
 export default function Login() {
+  const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState(null)
@@ -17,7 +19,7 @@ export default function Login() {
     setLoading(true)
 
     if (!isSupabaseConfigured) {
-      setError('Backend is not configured. Please set the Supabase environment variables.')
+      setError(t('auth.backend_error'))
       setLoading(false)
       return
     }
@@ -32,7 +34,7 @@ export default function Login() {
         navigate('/app')
       }
     } catch {
-      setError('Unable to connect to the server. Please check your connection and try again.')
+      setError(t('auth.connection_error'))
       setLoading(false)
     }
   }
@@ -47,7 +49,7 @@ export default function Login() {
 
         <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
           <h2 className="mb-5 text-center text-base font-medium text-zinc-900 dark:text-zinc-100">
-            Welcome back
+            {t('auth.welcome_back')}
           </h2>
 
           {error && (
@@ -58,25 +60,25 @@ export default function Login() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="mb-1.5 block text-sm text-zinc-600 dark:text-zinc-400">Email</label>
+              <label className="mb-1.5 block text-sm text-zinc-600 dark:text-zinc-400">{t('auth.email_label')}</label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500"
-                placeholder="you@example.com"
+                placeholder={t('auth.email_placeholder')}
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm text-zinc-600 dark:text-zinc-400">Password</label>
+              <label className="mb-1.5 block text-sm text-zinc-600 dark:text-zinc-400">{t('auth.password_label')}</label>
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500"
-                placeholder="Your password"
+                placeholder={t('auth.password_placeholder')}
               />
             </div>
             <button
@@ -84,15 +86,15 @@ export default function Login() {
               disabled={loading}
               className="mt-1 w-full rounded-xl bg-emerald-600 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 active:scale-[0.98] disabled:opacity-50"
             >
-              {loading ? 'Signing in…' : 'Sign in'}
+              {loading ? t('auth.signing_in') : t('auth.sign_in')}
             </button>
           </form>
         </div>
 
         <p className="mt-5 text-center text-sm text-zinc-500 dark:text-zinc-400">
-          Don&apos;t have an account?{' '}
+          {t('auth.no_account')}{' '}
           <Link to="/signup" className="font-medium text-emerald-600 hover:text-emerald-700 dark:text-emerald-400">
-            Sign up
+            {t('auth.sign_up')}
           </Link>
         </p>
       </div>
