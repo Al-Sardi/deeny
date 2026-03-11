@@ -2,13 +2,10 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { BookOpen } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { getToday } from '../lib/dateUtils'
 
 const AYAH_KEY = 'daily-ayah'
 const API_URL = 'https://api.alquran.cloud/v1/ayah/random/en.asad'
-
-function getToday() {
-  return new Date().toISOString().split('T')[0]
-}
 
 function loadCachedAyah() {
   try {

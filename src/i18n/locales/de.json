@@ -9,7 +9,8 @@
     "loading_prayer_times": "Gebetszeiten laden\u2026",
     "next": "N\u00e4chstes:",
     "at": "um",
-    "all_prayers_passed": "Alle Gebete sind f\u00fcr heute vorbei"
+    "all_prayers_passed": "Alle Gebete sind f\u00fcr heute vorbei",
+    "sync_error": "Sync fehlgeschlagen"
   },
   "prayers": {
     "fajr": "Fajr",

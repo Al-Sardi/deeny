@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { TrendingUp } from 'lucide-react'
+import { getToday } from '../lib/dateUtils'
 
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -20,7 +21,7 @@ export default function PrayerJourney({ prayers, history, inline = false }) {
     const buckets = {}
 
     // Add today
-    const todayStr = new Date().toISOString().split('T')[0]
+    const todayStr = getToday()
     const todayMonth = todayStr.slice(0, 7) // "YYYY-MM"
     const todayCompleted = Object.values(prayers).filter(Boolean).length
     const todayPerfect = todayCompleted === 5

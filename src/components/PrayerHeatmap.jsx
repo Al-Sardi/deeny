@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { motion } from 'framer-motion'
+import { getToday, formatLocalDate } from '../lib/dateUtils'
 
 const DAYS = 91 // ~13 weeks
 const COLS = Math.ceil(DAYS / 7)
@@ -19,7 +20,7 @@ export default function PrayerHeatmap({ prayers, history }) {
     history.forEach((day) => {
       map[day.date] = Object.values(day.prayers).filter(Boolean).length
     })
-    const todayStr = new Date().toISOString().split('T')[0]
+    const todayStr = getToday()
     map[todayStr] = Object.values(prayers).filter(Boolean).length
 
     // Build grid: 7 rows (Mon→Sun) × N columns (weeks)
@@ -41,7 +42,7 @@ export default function PrayerHeatmap({ prayers, history }) {
     const totalWeeks = COLS + 1 // extra week for alignment
     for (let col = 0; col < totalWeeks; col++) {
       for (let row = 0; row < 7; row++) {
-        const dateStr = cursor.toISOString().split('T')[0]
+        const dateStr = formatLocalDate(cursor)
         const isFuture = cursor > today
 
         cells.push({

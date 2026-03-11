@@ -9,7 +9,8 @@
     "loading_prayer_times": "Cargando horarios de oraci\u00f3n\u2026",
     "next": "Siguiente:",
     "at": "a las",
-    "all_prayers_passed": "Todas las oraciones han pasado hoy"
+    "all_prayers_passed": "Todas las oraciones han pasado hoy",
+    "sync_error": "Error de sincronizaci\u00f3n"
   },
   "prayers": {
     "fajr": "Fajr",

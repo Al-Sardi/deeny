@@ -1,11 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
+import { getToday } from '../lib/dateUtils'
 
 const CACHE_KEY = 'prayer-times-cache'
 const PRAYER_NAMES = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']
-
-function getToday() {
-  return new Date().toISOString().split('T')[0]
-}
 
 /** Parse "HH:MM" into total minutes since midnight */
 function timeToMinutes(timeStr) {

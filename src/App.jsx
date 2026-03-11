@@ -21,6 +21,7 @@ import {
   rowsToHistory,
 } from './lib/supabasePrayers'
 import { supabase } from './lib/supabase'
+import { getToday, getYesterday } from './lib/dateUtils'
 
 const THEME_KEY = 'prayer-theme'
 const TOTAL_PRAYERS = 5
@@ -32,14 +33,6 @@ const defaultPrayers = () => ({
   Maghrib: false,
   Isha: false,
 })
-
-const getToday = () => new Date().toISOString().split('T')[0]
-
-const getYesterday = () => {
-  const d = new Date()
-  d.setDate(d.getDate() - 1)
-  return d.toISOString().split('T')[0]
-}
 
 const tabVariants = {
   initial: { opacity: 0, y: 6 },
@@ -54,6 +47,7 @@ export default function App() {
   const [streak, setStreak] = useState(0)
   const [history, setHistory] = useState([])
   const [dataLoading, setDataLoading] = useState(true)
+  const [syncStatus, setSyncStatus] = useState('saved') // 'saved' | 'saving' | 'error'
 
   const [dark, setDark] = useState(() => localStorage.getItem(THEME_KEY) === 'dark')
   const [activeTab, setActiveTab] = useState('prayers')
@@ -64,13 +58,15 @@ export default function App() {
   const dirtyRef = useRef(false)
   const tokenRef = useRef(null)
   const initialLoadRef = useRef(true)
+  const retryTimerRef = useRef(null)
 
   // Always keep latestRef in sync so flush has current values
   useEffect(() => {
     latestRef.current = { prayers, streak }
   })
 
-  // Keep access token cached for synchronous flush on page close
+  // Keep access token cached for synchronous flush on page close.
+  // Also refreshes the token proactively so saves never use an expired JWT.
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       tokenRef.current = data?.session?.access_token ?? null
@@ -83,19 +79,40 @@ export default function App() {
     return () => subscription.unsubscribe()
   }, [])
 
-  // Flush pending save on page close / app switch
+  /** Ensure a fresh token before any save. Triggers Supabase auto-refresh if needed. */
+  const ensureFreshToken = async () => {
+    const { data } = await supabase.auth.getSession()
+    const token = data?.session?.access_token ?? null
+    tokenRef.current = token
+    return token
+  }
+
+  // Flush pending save on page close / app switch.
+  // Reload fresh data when the app becomes visible again (cross-device sync).
   useEffect(() => {
     function flush() {
       if (dirtyRef.current && tokenRef.current) {
         const { prayers: p, streak: s } = latestRef.current
-        // keepalive fetch survives page unload on mobile browsers
         flushSave(tokenRef.current, user.id, getToday(), p, s)
         dirtyRef.current = false
       }
     }
 
-    function handleVisibilityChange() {
-      if (document.visibilityState === 'hidden') flush()
+    async function handleVisibilityChange() {
+      if (document.visibilityState === 'hidden') {
+        flush()
+      } else if (document.visibilityState === 'visible') {
+        // App came back to foreground — refresh token and reload data
+        try {
+          await ensureFreshToken()
+          const today = getToday()
+          const { data } = await fetchTodayPrayers(user.id, today)
+          if (data) {
+            setPrayers(rowToPrayers(data))
+            setStreak(data.streak)
+          }
+        } catch { /* ignore — non-critical refresh */ }
+      }
     }
 
     window.addEventListener('beforeunload', flush)
@@ -186,7 +203,7 @@ export default function App() {
     migrate()
   }, [dataLoading, history.length, user.id])
 
-  // Save immediately on every prayer change (no debounce — max 5 toggles/day)
+  // Save immediately on every prayer change with retry on failure
   useEffect(() => {
     if (dataLoading) return
 
@@ -196,12 +213,43 @@ export default function App() {
       return
     }
 
+    clearTimeout(retryTimerRef.current)
     dirtyRef.current = true
-    upsertTodayPrayers(user.id, getToday(), prayers, streak)
-      .then(({ error }) => {
-        if (error) console.error('Failed to save prayers:', error)
-        else dirtyRef.current = false
-      })
+    setSyncStatus('saving')
+
+    async function save(attempt = 1) {
+      try {
+        // Ensure token is fresh before saving
+        if (attempt > 1) await ensureFreshToken()
+
+        const { error: saveError } = await upsertTodayPrayers(
+          user.id, getToday(), prayers, streak
+        )
+
+        if (saveError) {
+          console.error(`Save failed (attempt ${attempt}):`, saveError)
+          if (attempt < 3) {
+            retryTimerRef.current = setTimeout(() => save(attempt + 1), 1500 * attempt)
+          } else {
+            setSyncStatus('error')
+          }
+        } else {
+          dirtyRef.current = false
+          setSyncStatus('saved')
+        }
+      } catch (err) {
+        console.error(`Save exception (attempt ${attempt}):`, err)
+        if (attempt < 3) {
+          retryTimerRef.current = setTimeout(() => save(attempt + 1), 1500 * attempt)
+        } else {
+          setSyncStatus('error')
+        }
+      }
+    }
+
+    save()
+
+    return () => clearTimeout(retryTimerRef.current)
   }, [prayers, streak, user.id, dataLoading])
 
   useEffect(() => {
@@ -233,6 +281,7 @@ export default function App() {
           nextPrayerTime={activeTab === 'prayers' ? nextPrayerTime : undefined}
           loading={activeTab === 'prayers' ? loading : false}
           error={activeTab === 'prayers' ? error : null}
+          syncStatus={syncStatus}
         />
 
         <AnimatePresence mode="wait">

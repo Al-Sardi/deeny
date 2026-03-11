@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import PrayerHeatmap from './PrayerHeatmap'
 import PrayerJourney from './PrayerJourney'
+import { getToday } from '../lib/dateUtils'
 
 const WEEKDAYS = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
 const MONTH_NAMES = [
@@ -15,7 +16,7 @@ function buildCompletionMap(prayers, history) {
   history.forEach((day) => {
     map[day.date] = Object.values(day.prayers).filter(Boolean).length
   })
-  const today = new Date().toISOString().split('T')[0]
+  const today = getToday()
   map[today] = Object.values(prayers).filter(Boolean).length
   return map
 }
@@ -46,7 +47,7 @@ export default function CalendarTab({ prayers, history, children }) {
   const completionMap = useMemo(() => buildCompletionMap(prayers, history), [prayers, history])
   const daysInMonth = getDaysInMonth(viewYear, viewMonth)
   const firstDayOffset = getFirstDayOffset(viewYear, viewMonth)
-  const todayStr = now.toISOString().split('T')[0]
+  const todayStr = getToday()
   const isCurrentMonth = viewYear === now.getFullYear() && viewMonth === now.getMonth()
 
   const prevMonth = () => { if (viewMonth === 0) { setViewYear(y => y - 1); setViewMonth(11) } else setViewMonth(m => m - 1) }

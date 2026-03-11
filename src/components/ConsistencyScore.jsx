@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { Activity } from 'lucide-react'
+import { formatLocalDate } from '../lib/dateUtils'
 
 function getLabel(pct) {
   if (pct >= 90) return { text: 'Excellent', color: 'text-emerald-600 dark:text-emerald-400' }
@@ -14,7 +15,7 @@ export default function ConsistencyScore({ prayers, history }) {
     const today = new Date()
     const thirtyDaysAgo = new Date(today)
     thirtyDaysAgo.setDate(today.getDate() - 29)
-    const cutoff = thirtyDaysAgo.toISOString().split('T')[0]
+    const cutoff = formatLocalDate(thirtyDaysAgo)
 
     // Count from history (past days within 30-day window)
     let completed = 0

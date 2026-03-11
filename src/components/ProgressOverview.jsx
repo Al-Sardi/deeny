@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { Flame, Zap, Activity } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { formatLocalDate } from '../lib/dateUtils'
 
 /* ── Level helpers (same logic as LevelCard) ── */
 
@@ -56,7 +57,7 @@ function calculateConsistency(prayers, history) {
   const today = new Date()
   const thirtyDaysAgo = new Date(today)
   thirtyDaysAgo.setDate(today.getDate() - 29)
-  const cutoff = thirtyDaysAgo.toISOString().split('T')[0]
+  const cutoff = formatLocalDate(thirtyDaysAgo)
 
   let completed = 0
   let totalDays = 0

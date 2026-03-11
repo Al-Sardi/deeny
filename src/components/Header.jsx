@@ -1,8 +1,8 @@
-import { motion } from 'framer-motion'
-import { Flame, Clock } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Flame, Clock, Check, AlertCircle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-export default function Header({ streak, nextPrayer, nextPrayerTime, loading, error }) {
+export default function Header({ streak, nextPrayer, nextPrayerTime, loading, error, syncStatus }) {
   const { t } = useTranslation()
 
   return (
@@ -15,21 +15,60 @@ export default function Header({ streak, nextPrayer, nextPrayerTime, loading, er
       {/* Title row */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <img src="/logo.png" alt="Deeny" className="h-8 w-8" />
+          <div className="relative">
+            <img src="/logo.png" alt="Deeny" className="h-8 w-8" />
+            {/* Sync indicator dot */}
+            <AnimatePresence>
+              {syncStatus === 'saving' && (
+                <motion.span
+                  key="saving"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-zinc-50 bg-amber-400 dark:border-zinc-950"
+                />
+              )}
+              {syncStatus === 'error' && (
+                <motion.span
+                  key="error"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-zinc-50 bg-red-500 dark:border-zinc-950"
+                />
+              )}
+            </AnimatePresence>
+          </div>
           <h1 className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
             Deeny
           </h1>
         </div>
 
-        {/* Streak badge — inline, not a separate card */}
-        {streak !== undefined && (
-          <div className="flex items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1.5 dark:bg-orange-950/40">
-            <Flame size={14} className="text-orange-500" fill="currentColor" />
-            <span className="text-sm font-semibold text-orange-600 dark:text-orange-400">
-              {streak}
-            </span>
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          {/* Sync error badge */}
+          {syncStatus === 'error' && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-1 dark:bg-red-950/40"
+            >
+              <AlertCircle size={12} className="text-red-500" />
+              <span className="text-[10px] font-medium text-red-600 dark:text-red-400">
+                {t('header.sync_error', 'Sync failed')}
+              </span>
+            </motion.div>
+          )}
+
+          {/* Streak badge */}
+          {streak !== undefined && (
+            <div className="flex items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1.5 dark:bg-orange-950/40">
+              <Flame size={14} className="text-orange-500" fill="currentColor" />
+              <span className="text-sm font-semibold text-orange-600 dark:text-orange-400">
+                {streak}
+              </span>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Next prayer — subtle, part of the page flow */}

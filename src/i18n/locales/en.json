@@ -9,7 +9,8 @@
     "loading_prayer_times": "Loading prayer times\u2026",
     "next": "Next:",
     "at": "at",
-    "all_prayers_passed": "All prayers passed for today"
+    "all_prayers_passed": "All prayers passed for today",
+    "sync_error": "Sync failed"
   },
   "prayers": {
     "fajr": "Fajr",
