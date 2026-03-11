@@ -18,7 +18,7 @@ export default function LandingPage() {
       {/* Hero */}
       <section className="flex flex-1 flex-col items-center justify-center px-6 py-24 text-center">
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
-          <img src="/logo.png" alt="Deeny" className="mb-6 h-20 w-20 mx-auto" />
+          <img src="/logo.png" alt="Deeny" className="mb-6 h-16 w-16 mx-auto" />
         </motion.div>
         <motion.h1
           initial={{ opacity: 0, y: 8 }}

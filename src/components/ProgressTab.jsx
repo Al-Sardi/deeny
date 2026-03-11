@@ -59,7 +59,7 @@ export default function ProgressTab({ prayers, streak, history }) {
         <div className="space-y-3">
           <CollapsibleCard
             title={t('progress.prayer_journey')}
-            icon="\ud83d\udd4c"
+            icon="🕌"
             expanded={expandedCard === 'journey'}
             onToggle={() => toggleCard('journey')}
           >
@@ -68,7 +68,7 @@ export default function ProgressTab({ prayers, streak, history }) {
 
           <CollapsibleCard
             title={t('progress.weekly_stats')}
-            icon="\ud83d\udcca"
+            icon="📊"
             expanded={expandedCard === 'weekly'}
             onToggle={() => toggleCard('weekly')}
           >
@@ -77,7 +77,7 @@ export default function ProgressTab({ prayers, streak, history }) {
 
           <CollapsibleCard
             title={t('progress.achievements')}
-            icon="\ud83c\udfc6"
+            icon="🏆"
             expanded={expandedCard === 'achievements'}
             onToggle={() => toggleCard('achievements')}
           >

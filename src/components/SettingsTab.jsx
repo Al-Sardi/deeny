@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Mail, Moon, LogOut, ChevronRight, Globe } from 'lucide-react'
+import { Mail, LogOut, ChevronRight, Globe } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 
@@ -66,7 +66,7 @@ export default function SettingsTab({ dark, onToggleTheme }) {
         <div className="rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
           {/* Dark mode row */}
           <div className="flex items-center gap-3 border-b border-zinc-100 px-5 py-4 dark:border-zinc-800">
-            <Moon size={16} className="text-zinc-400 dark:text-zinc-500" strokeWidth={1.5} />
+            <img src="/logo.png" alt="" className="h-4 w-4" />
             <div className="min-w-0 flex-1">
               <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{t('settings.dark_mode')}</p>
               <p className="text-xs text-zinc-400 dark:text-zinc-500">
