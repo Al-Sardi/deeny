@@ -14,7 +14,7 @@ function getConsistencyColor(pct) {
   return 'text-zinc-500 dark:text-zinc-400'
 }
 
-export default function PrayerJourney({ prayers, history }) {
+export default function PrayerJourney({ prayers, history, inline = false }) {
   const months = useMemo(() => {
     // Group history + today by month
     const buckets = {}
@@ -63,6 +63,47 @@ export default function PrayerJourney({ prayers, history }) {
 
   if (months.length === 0) return null
 
+  const monthCards = (
+    <div className="space-y-3">
+      {months.map(({ key, label, consistency, totalPrayers, perfectDays }, i) => (
+        <motion.div
+          key={key}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2, delay: i * 0.04 }}
+          className={`rounded-xl bg-zinc-50 px-4 py-3.5 dark:bg-zinc-800/50 ${i === 0 ? 'ring-1 ring-emerald-500/20' : ''}`}
+        >
+          <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{label}</p>
+
+          <div className="mt-2 flex items-center gap-5">
+            <div>
+              <span className={`text-lg font-semibold tabular-nums tracking-tight ${getConsistencyColor(consistency)}`}>
+                {consistency}%
+              </span>
+              <p className="text-[11px] text-zinc-400 dark:text-zinc-500">Consistency</p>
+            </div>
+            <div className="h-6 w-px bg-zinc-200 dark:bg-zinc-700" />
+            <div>
+              <span className="text-lg font-semibold tabular-nums tracking-tight text-zinc-900 dark:text-zinc-100">
+                {totalPrayers}
+              </span>
+              <p className="text-[11px] text-zinc-400 dark:text-zinc-500">Prayers</p>
+            </div>
+            <div className="h-6 w-px bg-zinc-200 dark:bg-zinc-700" />
+            <div>
+              <span className="text-lg font-semibold tabular-nums tracking-tight text-zinc-900 dark:text-zinc-100">
+                {perfectDays}
+              </span>
+              <p className="text-[11px] text-zinc-400 dark:text-zinc-500">Perfect days</p>
+            </div>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  )
+
+  if (inline) return monthCards
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -74,43 +115,7 @@ export default function PrayerJourney({ prayers, history }) {
         <TrendingUp size={16} className="text-emerald-500" strokeWidth={1.5} />
         <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Prayer Journey</span>
       </div>
-
-      <div className="space-y-3">
-        {months.map(({ key, label, consistency, totalPrayers, perfectDays }, i) => (
-          <motion.div
-            key={key}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2, delay: i * 0.04 }}
-            className={`rounded-xl bg-zinc-50 px-4 py-3.5 dark:bg-zinc-800/50 ${i === 0 ? 'ring-1 ring-emerald-500/20' : ''}`}
-          >
-            <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{label}</p>
-
-            <div className="mt-2 flex items-center gap-5">
-              <div>
-                <span className={`text-lg font-semibold tabular-nums tracking-tight ${getConsistencyColor(consistency)}`}>
-                  {consistency}%
-                </span>
-                <p className="text-[11px] text-zinc-400 dark:text-zinc-500">Consistency</p>
-              </div>
-              <div className="h-6 w-px bg-zinc-200 dark:bg-zinc-700" />
-              <div>
-                <span className="text-lg font-semibold tabular-nums tracking-tight text-zinc-900 dark:text-zinc-100">
-                  {totalPrayers}
-                </span>
-                <p className="text-[11px] text-zinc-400 dark:text-zinc-500">Prayers</p>
-              </div>
-              <div className="h-6 w-px bg-zinc-200 dark:bg-zinc-700" />
-              <div>
-                <span className="text-lg font-semibold tabular-nums tracking-tight text-zinc-900 dark:text-zinc-100">
-                  {perfectDays}
-                </span>
-                <p className="text-[11px] text-zinc-400 dark:text-zinc-500">Perfect days</p>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+      {monthCards}
     </motion.div>
   )
 }

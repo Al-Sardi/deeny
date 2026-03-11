@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 
 const PRAYER_NAMES = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']
 
-export default function WeeklyStats({ prayers, history }) {
+export default function WeeklyStats({ prayers, history, inline = false }) {
   const allDays = [{ prayers }, ...history]
   const totalDays = allDays.length
 
@@ -11,19 +11,21 @@ export default function WeeklyStats({ prayers, history }) {
     count: allDays.filter((day) => day.prayers[name]).length,
   }))
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, delay: 0.1 }}
-      className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
-    >
-      <h2 className="mb-4 text-sm font-medium text-zinc-500 dark:text-zinc-400">
-        Weekly overview
-        <span className="ml-1 text-zinc-400 dark:text-zinc-500">
-          · {totalDays} {totalDays === 1 ? 'day' : 'days'}
-        </span>
-      </h2>
+  const content = (
+    <>
+      {!inline && (
+        <h2 className="mb-4 text-sm font-medium text-zinc-500 dark:text-zinc-400">
+          Weekly overview
+          <span className="ml-1 text-zinc-400 dark:text-zinc-500">
+            · {totalDays} {totalDays === 1 ? 'day' : 'days'}
+          </span>
+        </h2>
+      )}
+      {inline && (
+        <p className="mb-3 text-xs text-zinc-400 dark:text-zinc-500">
+          {totalDays} {totalDays === 1 ? 'day' : 'days'} tracked
+        </p>
+      )}
       <div className="space-y-3">
         {stats.map(({ name, count }) => (
           <div key={name} className="flex items-center gap-3">
@@ -42,6 +44,19 @@ export default function WeeklyStats({ prayers, history }) {
           </div>
         ))}
       </div>
+    </>
+  )
+
+  if (inline) return <div>{content}</div>
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, delay: 0.1 }}
+      className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+    >
+      {content}
     </motion.div>
   )
 }

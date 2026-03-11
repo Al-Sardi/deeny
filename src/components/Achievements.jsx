@@ -30,7 +30,7 @@ const fadeUp = {
   }),
 }
 
-export default function Achievements({ prayers, streak, history }) {
+export default function Achievements({ prayers, streak, history, inline = false }) {
   const { user } = useAuth()
   const [unlocked, setUnlocked] = useState([])
   const [newlyUnlocked, setNewlyUnlocked] = useState([])
@@ -93,51 +93,55 @@ export default function Achievements({ prayers, streak, history }) {
     }
   }, [prayers, streak, history, dbStats, dbTasbihTotal, unlocked, user.id])
 
+  const achievementRows = ACHIEVEMENTS.map((a, i) => {
+    const isUnlocked = unlocked.includes(a.id)
+    const isNew = newlyUnlocked.includes(a.id)
+    const isLast = i === ACHIEVEMENTS.length - 1
+
+    return (
+      <motion.div
+        key={a.id}
+        custom={i}
+        variants={fadeUp}
+        initial="hidden"
+        animate="visible"
+        className={`flex items-center gap-4 ${inline ? 'py-3' : 'px-5 py-3.5'}
+          ${!isLast ? 'border-b border-zinc-100 dark:border-zinc-800' : ''}
+          ${isNew ? 'bg-emerald-50/50 dark:bg-emerald-950/20' : ''}`}
+      >
+        <span className={`text-xl transition-all ${isUnlocked ? '' : 'opacity-20 grayscale'}`}>
+          {a.icon}
+        </span>
+
+        <div className="min-w-0 flex-1">
+          <p className={`text-sm font-medium ${isUnlocked ? 'text-zinc-900 dark:text-zinc-100' : 'text-zinc-400 dark:text-zinc-600'}`}>
+            {a.label}
+          </p>
+          <p className={`text-xs ${isUnlocked ? 'text-zinc-500 dark:text-zinc-400' : 'text-zinc-300 dark:text-zinc-700'}`}>
+            {a.description}
+          </p>
+        </div>
+
+        {isUnlocked ? (
+          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500">
+            <Check size={12} strokeWidth={3} className="text-white" />
+          </div>
+        ) : (
+          <Lock size={14} className="text-zinc-300 dark:text-zinc-700" strokeWidth={1.5} />
+        )}
+      </motion.div>
+    )
+  })
+
+  if (inline) return <div>{achievementRows}</div>
+
   return (
     <div>
       <h2 className="mb-3 text-sm font-medium text-zinc-500 dark:text-zinc-400">
         Achievements
       </h2>
       <div className="rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        {ACHIEVEMENTS.map((a, i) => {
-          const isUnlocked = unlocked.includes(a.id)
-          const isNew = newlyUnlocked.includes(a.id)
-          const isLast = i === ACHIEVEMENTS.length - 1
-
-          return (
-            <motion.div
-              key={a.id}
-              custom={i}
-              variants={fadeUp}
-              initial="hidden"
-              animate="visible"
-              className={`flex items-center gap-4 px-5 py-3.5
-                ${!isLast ? 'border-b border-zinc-100 dark:border-zinc-800' : ''}
-                ${isNew ? 'bg-emerald-50/50 dark:bg-emerald-950/20' : ''}`}
-            >
-              <span className={`text-xl transition-all ${isUnlocked ? '' : 'opacity-20 grayscale'}`}>
-                {a.icon}
-              </span>
-
-              <div className="min-w-0 flex-1">
-                <p className={`text-sm font-medium ${isUnlocked ? 'text-zinc-900 dark:text-zinc-100' : 'text-zinc-400 dark:text-zinc-600'}`}>
-                  {a.label}
-                </p>
-                <p className={`text-xs ${isUnlocked ? 'text-zinc-500 dark:text-zinc-400' : 'text-zinc-300 dark:text-zinc-700'}`}>
-                  {a.description}
-                </p>
-              </div>
-
-              {isUnlocked ? (
-                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500">
-                  <Check size={12} strokeWidth={3} className="text-white" />
-                </div>
-              ) : (
-                <Lock size={14} className="text-zinc-300 dark:text-zinc-700" strokeWidth={1.5} />
-              )}
-            </motion.div>
-          )
-        })}
+        {achievementRows}
       </div>
     </div>
   )
