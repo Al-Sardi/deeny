@@ -1,10 +1,9 @@
-import { Home, Flame, Calendar, Wrench, Settings } from 'lucide-react'
+import { Home, BarChart3, Wrench, Settings } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 const tabs = [
   { id: 'prayers', label: 'Home', Icon: Home },
-  { id: 'streaks', label: 'Streaks', Icon: Flame },
-  { id: 'calendar', label: 'Calendar', Icon: Calendar },
+  { id: 'progress', label: 'Progress', Icon: BarChart3 },
   { id: 'tools', label: 'Tools', Icon: Wrench },
   { id: 'settings', label: 'Settings', Icon: Settings },
 ]

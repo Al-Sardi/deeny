@@ -4,10 +4,8 @@ import { useAuth } from './context/AuthContext'
 import Header from './components/Header'
 import PrayerList from './components/PrayerList'
 import ProgressBar from './components/ProgressBar'
-import WeeklyStats from './components/WeeklyStats'
 import DailyAyah from './components/DailyAyah'
-import StreaksTab from './components/StreaksTab'
-import CalendarTab from './components/CalendarTab'
+import ProgressTab from './components/ProgressTab'
 import SettingsTab from './components/SettingsTab'
 import ToolsTab from './components/ToolsTab'
 import BottomNav from './components/BottomNav'
@@ -230,17 +228,9 @@ export default function App() {
             </motion.div>
           )}
 
-          {activeTab === 'streaks' && (
-            <motion.div key="streaks" variants={tabVariants} initial="initial" animate="animate" exit="exit">
-              <StreaksTab prayers={prayers} streak={streak} history={history} />
-            </motion.div>
-          )}
-
-          {activeTab === 'calendar' && (
-            <motion.div key="calendar" variants={tabVariants} initial="initial" animate="animate" exit="exit">
-              <CalendarTab prayers={prayers} history={history}>
-                <WeeklyStats prayers={prayers} history={history} />
-              </CalendarTab>
+          {activeTab === 'progress' && (
+            <motion.div key="progress" variants={tabVariants} initial="initial" animate="animate" exit="exit">
+              <ProgressTab prayers={prayers} streak={streak} history={history} />
             </motion.div>
           )}
 
