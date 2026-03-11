@@ -15,10 +15,12 @@ import {
   fetchYesterdayPrayers,
   fetchPrayerHistory,
   upsertTodayPrayers,
+  flushSave,
   bulkInsertHistory,
   rowToPrayers,
   rowsToHistory,
 } from './lib/supabasePrayers'
+import { supabase } from './lib/supabase'
 
 const THEME_KEY = 'prayer-theme'
 const TOTAL_PRAYERS = 5
@@ -58,34 +60,51 @@ export default function App() {
 
   const { prayerTimes, nextPrayer, nextPrayerTime, loading, error } = usePrayerTimes()
 
-  const saveTimerRef = useRef(null)
   const latestRef = useRef({ prayers: defaultPrayers(), streak: 0 })
   const dirtyRef = useRef(false)
+  const tokenRef = useRef(null)
+  const initialLoadRef = useRef(true)
 
   // Always keep latestRef in sync so flush has current values
   useEffect(() => {
     latestRef.current = { prayers, streak }
   })
 
+  // Keep access token cached for synchronous flush on page close
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      tokenRef.current = data?.session?.access_token ?? null
+    })
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        tokenRef.current = session?.access_token ?? null
+      }
+    )
+    return () => subscription.unsubscribe()
+  }, [])
+
   // Flush pending save on page close / app switch
   useEffect(() => {
     function flush() {
-      if (dirtyRef.current) {
+      if (dirtyRef.current && tokenRef.current) {
         const { prayers: p, streak: s } = latestRef.current
-        // navigator.sendBeacon isn't available for Supabase, so fire-and-forget
-        upsertTodayPrayers(user.id, getToday(), p, s).catch(() => {})
+        // keepalive fetch survives page unload on mobile browsers
+        flushSave(tokenRef.current, user.id, getToday(), p, s)
         dirtyRef.current = false
       }
     }
 
-    window.addEventListener('beforeunload', flush)
-    document.addEventListener('visibilitychange', () => {
+    function handleVisibilityChange() {
       if (document.visibilityState === 'hidden') flush()
-    })
+    }
+
+    window.addEventListener('beforeunload', flush)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
 
     return () => {
       window.removeEventListener('beforeunload', flush)
-      flush() // also flush on unmount
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      flush()
     }
   }, [user.id])
 
@@ -167,20 +186,22 @@ export default function App() {
     migrate()
   }, [dataLoading, history.length, user.id])
 
+  // Save immediately on every prayer change (no debounce — max 5 toggles/day)
   useEffect(() => {
     if (dataLoading) return
 
-    dirtyRef.current = true
-    clearTimeout(saveTimerRef.current)
-    saveTimerRef.current = setTimeout(() => {
-      upsertTodayPrayers(user.id, getToday(), prayers, streak)
-        .then(({ error }) => {
-          if (error) console.error('Failed to save prayers:', error)
-          else dirtyRef.current = false
-        })
-    }, 500)
+    // Skip the very first run right after loading from DB
+    if (initialLoadRef.current) {
+      initialLoadRef.current = false
+      return
+    }
 
-    return () => clearTimeout(saveTimerRef.current)
+    dirtyRef.current = true
+    upsertTodayPrayers(user.id, getToday(), prayers, streak)
+      .then(({ error }) => {
+        if (error) console.error('Failed to save prayers:', error)
+        else dirtyRef.current = false
+      })
   }, [prayers, streak, user.id, dataLoading])
 
   useEffect(() => {

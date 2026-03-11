@@ -4,7 +4,7 @@
  * Each day has one row per user. The UNIQUE(user_id, date) constraint
  * lets us use upsert for both create and update operations.
  */
-import { supabase } from './supabase'
+import { supabase, supabaseUrl, supabaseAnonKey } from './supabase'
 
 // ── Column ↔ React key mapping ───────────────────────────
 
@@ -104,4 +104,39 @@ export async function bulkInsertHistory(userId, historyArray) {
     .from('prayers')
     .upsert(rows, { onConflict: 'user_id,date' })
   return { error }
+}
+
+/**
+ * Fire-and-forget save using fetch with keepalive: true.
+ * Survives page unload / visibility change on mobile browsers.
+ * Called synchronously from beforeunload / visibilitychange handlers.
+ */
+export function flushSave(accessToken, userId, todayStr, prayers, streak) {
+  const url = `${supabaseUrl}/rest/v1/prayers?on_conflict=user_id,date`
+  const body = JSON.stringify({
+    user_id: userId,
+    date: todayStr,
+    fajr: prayers.Fajr,
+    dhuhr: prayers.Dhuhr,
+    asr: prayers.Asr,
+    maghrib: prayers.Maghrib,
+    isha: prayers.Isha,
+    streak,
+  })
+
+  try {
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': supabaseAnonKey,
+        'Authorization': `Bearer ${accessToken}`,
+        'Prefer': 'resolution=merge-duplicates',
+      },
+      body,
+      keepalive: true,
+    }).catch(() => {})
+  } catch {
+    // ignore — page is unloading
+  }
 }
