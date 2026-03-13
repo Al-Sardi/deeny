@@ -65,23 +65,40 @@ export async function fetchPrayerHistory(userId, todayStr, limit = 90) {
 
 // ── Mutations ────────────────────────────────────────────
 
-/** Create or update today's prayer row (debounce target). */
+/** Create or update today's prayer row. Returns the written row for verification. */
 export async function upsertTodayPrayers(userId, todayStr, prayers, streak) {
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('prayers')
     .upsert(
       {
         user_id: userId,
         date: todayStr,
-        fajr: prayers.Fajr,
-        dhuhr: prayers.Dhuhr,
-        asr: prayers.Asr,
-        maghrib: prayers.Maghrib,
-        isha: prayers.Isha,
+        fajr: prayers.Fajr ?? false,
+        dhuhr: prayers.Dhuhr ?? false,
+        asr: prayers.Asr ?? false,
+        maghrib: prayers.Maghrib ?? false,
+        isha: prayers.Isha ?? false,
         streak,
       },
       { onConflict: 'user_id,date' }
     )
+    .select()
+    .single()
+
+  // Verify the write actually persisted the correct values
+  if (!error && data) {
+    const mismatch =
+      data.fajr !== (prayers.Fajr ?? false) ||
+      data.dhuhr !== (prayers.Dhuhr ?? false) ||
+      data.asr !== (prayers.Asr ?? false) ||
+      data.maghrib !== (prayers.Maghrib ?? false) ||
+      data.isha !== (prayers.Isha ?? false)
+    if (mismatch) {
+      console.error('Upsert mismatch — wrote:', prayers, 'got back:', data)
+      return { error: new Error('Save verification failed: data mismatch') }
+    }
+  }
+
   return { error }
 }
 

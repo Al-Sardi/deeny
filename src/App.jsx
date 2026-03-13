@@ -59,6 +59,7 @@ export default function App() {
   const tokenRef = useRef(null)
   const initialLoadRef = useRef(true)
   const retryTimerRef = useRef(null)
+  const saveTimerRef = useRef(null)
 
   // Always keep latestRef in sync so flush has current values
   useEffect(() => {
@@ -91,6 +92,9 @@ export default function App() {
   // Reload fresh data when the app becomes visible again (cross-device sync).
   useEffect(() => {
     function flush() {
+      // Cancel any pending debounced save — we'll flush directly instead
+      clearTimeout(saveTimerRef.current)
+      clearTimeout(retryTimerRef.current)
       if (dirtyRef.current && tokenRef.current) {
         const { prayers: p, streak: s } = latestRef.current
         flushSave(tokenRef.current, user.id, getToday(), p, s)
@@ -102,12 +106,14 @@ export default function App() {
       if (document.visibilityState === 'hidden') {
         flush()
       } else if (document.visibilityState === 'visible') {
-        // App came back to foreground — refresh token and reload data
+        // App came back to foreground — refresh token and reload data.
+        // Mark as loading so the save effect doesn't re-save what we just fetched.
         try {
           await ensureFreshToken()
           const today = getToday()
           const { data } = await fetchTodayPrayers(user.id, today)
           if (data) {
+            initialLoadRef.current = true
             setPrayers(rowToPrayers(data))
             setStreak(data.streak)
           }
@@ -203,7 +209,7 @@ export default function App() {
     migrate()
   }, [dataLoading, history.length, user.id])
 
-  // Save immediately on every prayer change with retry on failure
+  // Save on prayer change with debounce and retry
   useEffect(() => {
     if (dataLoading) return
 
@@ -214,42 +220,51 @@ export default function App() {
     }
 
     clearTimeout(retryTimerRef.current)
+    clearTimeout(saveTimerRef.current)
     dirtyRef.current = true
     setSyncStatus('saving')
 
-    async function save(attempt = 1) {
-      try {
-        // Ensure token is fresh before saving
-        if (attempt > 1) await ensureFreshToken()
+    // Debounce 300ms so rapid toggles don't fire multiple concurrent saves
+    saveTimerRef.current = setTimeout(() => {
+      const prayerSnapshot = { ...prayers }
+      const streakSnapshot = streak
 
-        const { error: saveError } = await upsertTodayPrayers(
-          user.id, getToday(), prayers, streak
-        )
+      async function save(attempt = 1) {
+        try {
+          if (attempt > 1) await ensureFreshToken()
 
-        if (saveError) {
-          console.error(`Save failed (attempt ${attempt}):`, saveError)
+          const { error: saveError } = await upsertTodayPrayers(
+            user.id, getToday(), prayerSnapshot, streakSnapshot
+          )
+
+          if (saveError) {
+            console.error(`Save failed (attempt ${attempt}):`, saveError)
+            if (attempt < 3) {
+              retryTimerRef.current = setTimeout(() => save(attempt + 1), 1500 * attempt)
+            } else {
+              setSyncStatus('error')
+            }
+          } else {
+            dirtyRef.current = false
+            setSyncStatus('saved')
+          }
+        } catch (err) {
+          console.error(`Save exception (attempt ${attempt}):`, err)
           if (attempt < 3) {
             retryTimerRef.current = setTimeout(() => save(attempt + 1), 1500 * attempt)
           } else {
             setSyncStatus('error')
           }
-        } else {
-          dirtyRef.current = false
-          setSyncStatus('saved')
-        }
-      } catch (err) {
-        console.error(`Save exception (attempt ${attempt}):`, err)
-        if (attempt < 3) {
-          retryTimerRef.current = setTimeout(() => save(attempt + 1), 1500 * attempt)
-        } else {
-          setSyncStatus('error')
         }
       }
+
+      save()
+    }, 300)
+
+    return () => {
+      clearTimeout(retryTimerRef.current)
+      clearTimeout(saveTimerRef.current)
     }
-
-    save()
-
-    return () => clearTimeout(retryTimerRef.current)
   }, [prayers, streak, user.id, dataLoading])
 
   useEffect(() => {
