@@ -1,3 +1,64 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* ─── Landing page styles ─── */
+
+/* Subtle Islamic geometric pattern */
+.landing-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l15 15-15 15L15 15 30 0zm0 30l15 15-15 15-15-15 15-15z' fill='%232C5C45' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+/* Glass navigation */
+.glass-nav {
+  background: rgba(253, 251, 247, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(44, 92, 69, 0.05);
+}
+
+/* Hero gradient */
+.hero-gradient {
+  background:
+    radial-gradient(circle at 80% 20%, #EAF0EC 0%, transparent 50%),
+    radial-gradient(circle at 20% 80%, #FFF8E7 0%, transparent 50%);
+}
+
+/* Phone mockup */
+.phone-mockup {
+  border: 12px solid #ffffff;
+  border-radius: 40px;
+  box-shadow: 0 25px 50px -12px rgba(44, 92, 69, 0.25);
+  background: #F8FAF9;
+  position: relative;
+  overflow: hidden;
+}
+
+.phone-notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 25px;
+  background: #ffffff;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  z-index: 10;
+}
+
+/* Floating animation for phone mockup */
+.floating-anim {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
