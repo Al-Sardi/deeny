@@ -9,6 +9,7 @@ import ProgressTab from './components/ProgressTab'
 import SettingsTab from './components/SettingsTab'
 import ToolsTab from './components/ToolsTab'
 import BottomNav from './components/BottomNav'
+import CelebrationModal from './components/CelebrationModal'
 import usePrayerTimes from './hooks/usePrayerTimes'
 import {
   fetchTodayPrayers,
@@ -49,6 +50,8 @@ export default function App() {
   const [dataLoading, setDataLoading] = useState(true)
   const [syncStatus, setSyncStatus] = useState('saved') // 'saved' | 'saving' | 'error'
 
+  const [showCelebration, setShowCelebration] = useState(false)
+
   const [dark, setDark] = useState(() => localStorage.getItem(THEME_KEY) === 'dark')
   const [activeTab, setActiveTab] = useState('prayers')
 
@@ -60,6 +63,7 @@ export default function App() {
   const initialLoadRef = useRef(true)
   const retryTimerRef = useRef(null)
   const saveTimerRef = useRef(null)
+  const celebratedTodayRef = useRef(false)
 
   // Always keep latestRef in sync so flush has current values
   useEffect(() => {
@@ -158,6 +162,11 @@ export default function App() {
         if (todayRes.data) {
           setPrayers(rowToPrayers(todayRes.data))
           setStreak(todayRes.data.streak)
+          // If all 5 already done, suppress celebration for this session
+          const row = todayRes.data
+          if ([row.fajr, row.dhuhr, row.asr, row.maghrib, row.isha].every(Boolean)) {
+            celebratedTodayRef.current = true
+          }
         } else {
           const yRow = yesterdayRes.data
           if (yRow) {
@@ -272,6 +281,16 @@ export default function App() {
     localStorage.setItem(THEME_KEY, dark ? 'dark' : 'light')
   }, [dark])
 
+  // Celebrate when all 5 prayers completed (once per day)
+  useEffect(() => {
+    if (initialLoadRef.current || celebratedTodayRef.current) return
+    const allDone = Object.values(prayers).every(Boolean)
+    if (allDone) {
+      celebratedTodayRef.current = true
+      setShowCelebration(true)
+    }
+  }, [prayers])
+
   const togglePrayer = (name) => setPrayers((prev) => ({ ...prev, [name]: !prev[name] }))
   const resetToday = () => setPrayers(defaultPrayers())
   const completedCount = Object.values(prayers).filter(Boolean).length
@@ -289,6 +308,11 @@ export default function App() {
 
   return (
     <div className="flex min-h-dvh items-start justify-center bg-zinc-50 px-5 pt-14 pb-28 transition-colors dark:bg-zinc-950">
+      <CelebrationModal
+        show={showCelebration}
+        streak={streak}
+        onClose={() => setShowCelebration(false)}
+      />
       <div className="w-full max-w-md">
         <Header
           streak={activeTab === 'prayers' ? streak : undefined}

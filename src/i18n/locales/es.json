@@ -179,5 +179,14 @@
     "backend_error": "El backend no est\u00e1 configurado. Configura las variables de entorno de Supabase.",
     "account_exists": "Ya existe una cuenta con este correo.",
     "connection_error": "No se pudo conectar al servidor. Verifica tu conexi\u00f3n."
+  },
+  "celebration": {
+    "arabic": "\u0628\u0627\u0631\u0643 \u0627\u0644\u0644\u0647 \u0641\u064a\u0643",
+    "transliteration": "Barakallahu feek",
+    "message": "Todas las oraciones completadas hoy. Que Allah las acepte.",
+    "xp_earned": "+50 XP",
+    "streak_maintained": "d\u00edas de racha",
+    "alhamdulillah": "Alhamdulillah",
+    "close": "Cerrar"
   }
 }
