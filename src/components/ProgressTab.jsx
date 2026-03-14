@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import ProgressOverview from './ProgressOverview'
 import PrayerHeatmap from './PrayerHeatmap'
 import PrayerCalendar from './PrayerCalendar'
-import PrayerJourney from './PrayerJourney'
+
 import WeeklyStats from './WeeklyStats'
 import Achievements from './Achievements'
 import CollapsibleCard from './CollapsibleCard'
@@ -57,16 +57,7 @@ export default function ProgressTab({ prayers, streak, history }) {
           {t('progress.statistics')}
         </motion.p>
         <div className="space-y-3">
-          <CollapsibleCard
-            title={t('progress.prayer_journey')}
-            icon="🕌"
-            expanded={expandedCard === 'journey'}
-            onToggle={() => toggleCard('journey')}
-          >
-            <PrayerJourney prayers={prayers} history={history} inline />
-          </CollapsibleCard>
-
-          <CollapsibleCard
+<CollapsibleCard
             title={t('progress.weekly_stats')}
             icon="📊"
             expanded={expandedCard === 'weekly'}

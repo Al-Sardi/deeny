@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import PrayerHeatmap from './PrayerHeatmap'
-import PrayerJourney from './PrayerJourney'
+
 import { getToday } from '../lib/dateUtils'
 
 const WEEKDAYS = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
@@ -128,8 +128,6 @@ export default function CalendarTab({ prayers, history, children }) {
       </div>
 
       <PrayerHeatmap prayers={prayers} history={history} />
-
-      <PrayerJourney prayers={prayers} history={history} />
 
       {children}
     </motion.div>
