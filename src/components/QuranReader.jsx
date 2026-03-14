@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import { ChevronRight, List, Search } from 'lucide-react'
+import { List, Search } from 'lucide-react'
 import SurahList from './SurahList'
 import SurahView from './SurahView'
 import QuranSearch from './QuranSearch'
@@ -65,13 +65,9 @@ export default function QuranReader({ onBack }) {
     <div className="space-y-4">
       {/* Top bar */}
       <div className="flex items-center justify-between">
-        <button
-          onClick={onBack}
-          className="flex items-center gap-1 text-sm font-medium text-emerald-600 transition hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
-        >
-          <ChevronRight size={16} className="rotate-180" strokeWidth={2} />
-          Back to Tools
-        </button>
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+          Quran
+        </h2>
 
         <div className="flex items-center gap-1 rounded-xl border border-zinc-200 bg-white p-1 dark:border-zinc-800 dark:bg-zinc-900">
           <button

@@ -1,11 +1,11 @@
-import { Home, BarChart3, Wrench, Settings } from 'lucide-react'
+import { Home, BarChart3, BookOpen, Settings } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 
 const tabs = [
   { id: 'prayers', labelKey: 'nav.home', Icon: Home },
   { id: 'progress', labelKey: 'nav.progress', Icon: BarChart3 },
-  { id: 'tools', labelKey: 'nav.tools', Icon: Wrench },
+  { id: 'quran', labelKey: 'nav.quran', Icon: BookOpen },
   { id: 'settings', labelKey: 'nav.settings', Icon: Settings },
 ]
 

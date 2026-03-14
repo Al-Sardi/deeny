@@ -7,7 +7,8 @@ import ProgressBar from './components/ProgressBar'
 import DailyAyah from './components/DailyAyah'
 import ProgressTab from './components/ProgressTab'
 import SettingsTab from './components/SettingsTab'
-import ToolsTab from './components/ToolsTab'
+import QuickTools from './components/QuickTools'
+import QuranReader from './components/QuranReader'
 import BottomNav from './components/BottomNav'
 import CelebrationModal from './components/CelebrationModal'
 import usePrayerTimes from './hooks/usePrayerTimes'
@@ -391,6 +392,7 @@ export default function App() {
                 prayerTimes={prayerTimes}
               />
               <ProgressBar completed={completedCount} total={TOTAL_PRAYERS} />
+              <QuickTools />
             </motion.div>
           )}
 
@@ -400,9 +402,9 @@ export default function App() {
             </motion.div>
           )}
 
-          {activeTab === 'tools' && (
-            <motion.div key="tools" variants={tabVariants} initial="initial" animate="animate" exit="exit">
-              <ToolsTab />
+          {activeTab === 'quran' && (
+            <motion.div key="quran" variants={tabVariants} initial="initial" animate="animate" exit="exit">
+              <QuranReader />
             </motion.div>
           )}
 
