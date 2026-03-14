@@ -52,8 +52,8 @@ export default function QuickTools() {
             transition={{ duration: 0.25, ease: 'easeOut' }}
             className="fixed inset-0 z-[60] flex flex-col bg-zinc-50 dark:bg-zinc-950"
           >
-            {/* Close bar */}
-            <div className="flex items-center justify-between px-5 pt-4 pb-2">
+            {/* Close bar — padded below iPhone status bar / notch */}
+            <div className="flex items-center justify-between px-5 pb-2" style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 1rem)' }}>
               <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
                 {t(`tools.${activeTool}`)}
               </h2>
