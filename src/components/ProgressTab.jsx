@@ -9,7 +9,7 @@ import WeeklyStats from './WeeklyStats'
 import Achievements from './Achievements'
 import CollapsibleCard from './CollapsibleCard'
 
-export default function ProgressTab({ prayers, streak, history, freezes = 0 }) {
+export default function ProgressTab({ prayers, streak, history, freezes = 0, onShare }) {
   const { t } = useTranslation()
   const [expandedCard, setExpandedCard] = useState(null)
 
@@ -27,7 +27,7 @@ export default function ProgressTab({ prayers, streak, history, freezes = 0 }) {
         >
           {t('progress.overview')}
         </motion.p>
-        <ProgressOverview prayers={prayers} streak={streak} history={history} />
+        <ProgressOverview prayers={prayers} streak={streak} history={history} onShare={onShare} />
       </section>
 
       {/* ── STREAK FREEZE ── */}

@@ -263,5 +263,19 @@
       "humility": "Demut",
       "other": "Sonstiges"
     }
+  },
+  "share": {
+    "button_label": "Teilen",
+    "day_streak": "Tage-Streak",
+    "today": "Heutige Gebete",
+    "completed": "erledigt",
+    "this_week": "Diese Woche",
+    "share_text": "Schau dir meinen Gebets-Streak auf Deeny an!",
+    "all_done_msg": "Alle Gebete heute erledigt. Alhamdulillah!",
+    "keep_going_msg": "Jedes Gebet z\u00e4hlt. Bleib dran!",
+    "share_button": "Teilen",
+    "download_button": "Herunterladen",
+    "generating": "Wird erstellt\u2026",
+    "close": "Schlie\u00dfen"
   }
 }

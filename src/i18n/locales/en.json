@@ -263,5 +263,19 @@
       "humility": "Humility",
       "other": "Other"
     }
+  },
+  "share": {
+    "button_label": "Share",
+    "day_streak": "day streak",
+    "today": "Today's Prayers",
+    "completed": "completed",
+    "this_week": "This Week",
+    "share_text": "Check out my prayer streak on Deeny!",
+    "all_done_msg": "All prayers completed today. Alhamdulillah!",
+    "keep_going_msg": "Every prayer counts. Keep going!",
+    "share_button": "Share",
+    "download_button": "Download",
+    "generating": "Generating…",
+    "close": "Close"
   }
 }

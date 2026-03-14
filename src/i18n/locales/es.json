@@ -263,5 +263,19 @@
       "humility": "Humildad",
       "other": "Otro"
     }
+  },
+  "share": {
+    "button_label": "Compartir",
+    "day_streak": "d\u00edas de racha",
+    "today": "Oraciones de hoy",
+    "completed": "completadas",
+    "this_week": "Esta semana",
+    "share_text": "\u00a1Mira mi racha de oraciones en Deeny!",
+    "all_done_msg": "Todas las oraciones completadas hoy. \u00a1Alhamdulillah!",
+    "keep_going_msg": "Cada oraci\u00f3n cuenta. \u00a1Sigue adelante!",
+    "share_button": "Compartir",
+    "download_button": "Descargar",
+    "generating": "Generando\u2026",
+    "close": "Cerrar"
   }
 }

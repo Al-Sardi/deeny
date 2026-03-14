@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { Flame, Zap, Activity } from 'lucide-react'
+import { Flame, Zap, Share2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { formatLocalDate } from '../lib/dateUtils'
 
@@ -76,7 +76,7 @@ function calculateConsistency(prayers, history) {
 
 /* ── Component ── */
 
-export default function ProgressOverview({ prayers, streak, history }) {
+export default function ProgressOverview({ prayers, streak, history, onShare }) {
   const { t } = useTranslation()
   const todayComplete = Object.values(prayers).filter(Boolean).length === 5
   const currentStreak = streak + (todayComplete ? 1 : 0)
@@ -104,9 +104,20 @@ export default function ProgressOverview({ prayers, streak, history }) {
       transition={{ duration: 0.3 }}
       className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
     >
-      <h3 className="mb-5 text-sm font-medium text-zinc-500 dark:text-zinc-400">
-        {t('progress.your_progress')}
-      </h3>
+      <div className="mb-5 flex items-center justify-between">
+        <h3 className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+          {t('progress.your_progress')}
+        </h3>
+        {onShare && (
+          <button
+            onClick={onShare}
+            className="flex items-center gap-1.5 rounded-lg bg-emerald-50 px-2.5 py-1.5 text-[11px] font-medium text-emerald-600 transition hover:bg-emerald-100 dark:bg-emerald-900/20 dark:text-emerald-400 dark:hover:bg-emerald-900/30"
+          >
+            <Share2 size={13} strokeWidth={2} />
+            {t('share.button_label')}
+          </button>
+        )}
+      </div>
 
       {/* Three metrics in a row */}
       <div className="grid grid-cols-3 gap-4">

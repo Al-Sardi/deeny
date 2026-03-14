@@ -12,6 +12,7 @@ import FridayReflection from './components/FridayReflection'
 import QuranReader from './components/QuranReader'
 import BottomNav from './components/BottomNav'
 import CelebrationModal from './components/CelebrationModal'
+import ShareCard from './components/ShareCard'
 import usePrayerTimes from './hooks/usePrayerTimes'
 import useNotifications from './hooks/useNotifications'
 import {
@@ -70,6 +71,7 @@ export default function App() {
   const [syncStatus, setSyncStatus] = useState('saved') // 'saved' | 'saving' | 'error'
 
   const [showCelebration, setShowCelebration] = useState(false)
+  const [showShare, setShowShare] = useState(false)
 
   const [dark, setDark] = useState(() => localStorage.getItem(THEME_KEY) === 'dark')
   const [activeTab, setActiveTab] = useState('prayers')
@@ -372,6 +374,16 @@ export default function App() {
         streak={streak}
         onClose={() => setShowCelebration(false)}
       />
+      <AnimatePresence>
+        {showShare && (
+          <ShareCard
+            prayers={prayers}
+            streak={streak}
+            history={history}
+            onClose={() => setShowShare(false)}
+          />
+        )}
+      </AnimatePresence>
       <div className="w-full max-w-md">
         <Header
           streak={activeTab === 'prayers' ? streak : undefined}
@@ -400,7 +412,7 @@ export default function App() {
 
           {activeTab === 'progress' && (
             <motion.div key="progress" variants={tabVariants} initial="initial" animate="animate" exit="exit">
-              <ProgressTab prayers={prayers} streak={streak} history={history} freezes={freezes} />
+              <ProgressTab prayers={prayers} streak={streak} history={history} freezes={freezes} onShare={() => setShowShare(true)} />
             </motion.div>
           )}
 
