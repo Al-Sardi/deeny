@@ -98,15 +98,8 @@ export default function ProgressTab({ prayers, streak, history, freezes = 0 }) {
         >
           {t('progress.statistics')}
         </motion.p>
-        <div className="space-y-3">
-<CollapsibleCard
-            title={t('progress.weekly_stats')}
-            icon="📊"
-            expanded={expandedCard === 'weekly'}
-            onToggle={() => toggleCard('weekly')}
-          >
-            <WeeklyStats prayers={prayers} history={history} inline />
-          </CollapsibleCard>
+        <div className="space-y-4">
+          <WeeklyStats prayers={prayers} history={history} />
 
           <CollapsibleCard
             title={t('progress.achievements')}
