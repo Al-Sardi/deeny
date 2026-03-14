@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom'
 import { motion, useInView } from 'framer-motion'
 import {
   CheckSquare, TrendingUp, Grid3x3, BookHeart, Compass,
-  ArrowRight, Sun, Star, CheckCircle, BookOpen,
+  ArrowRight, Sun, Star, CheckCircle, BookOpen, Shield,
+  Bell, Sparkles, PenLine,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useRef } from 'react'
@@ -28,7 +29,11 @@ function Reveal({ children, className = '', delay = 0 }) {
 const features = [
   { key: 'prayer_tracking', Icon: CheckSquare, bg: 'bg-[#EAF0EC]', color: 'text-[#2C5C45]' },
   { key: 'streaks', Icon: TrendingUp, bg: 'bg-[#FFF8E7]', color: 'text-[#D4AF37]' },
-  { key: 'heatmap', Icon: Grid3x3, bg: 'bg-blue-50', color: 'text-blue-600' },
+  { key: 'quran_reader', Icon: BookOpen, bg: 'bg-emerald-50', color: 'text-emerald-600' },
+  { key: 'streak_freeze', Icon: Shield, bg: 'bg-blue-50', color: 'text-blue-600' },
+  { key: 'reflections', Icon: PenLine, bg: 'bg-teal-50', color: 'text-teal-600' },
+  { key: 'notifications', Icon: Bell, bg: 'bg-amber-50', color: 'text-amber-600' },
+  { key: 'heatmap', Icon: Grid3x3, bg: 'bg-indigo-50', color: 'text-indigo-600' },
   { key: 'names', Icon: BookHeart, bg: 'bg-purple-50', color: 'text-purple-600' },
 ]
 
@@ -196,36 +201,38 @@ export default function LandingPage() {
             </p>
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((f, i) => (
-              <Reveal key={f.key} delay={i * 0.08}>
-                <div className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-gray-100 h-full">
-                  <div className={`w-14 h-14 rounded-2xl ${f.bg} flex items-center justify-center ${f.color} mb-6`}>
-                    <f.Icon className="w-7 h-7" />
+              <Reveal key={f.key} delay={i * 0.06}>
+                <div className="bg-white rounded-3xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-gray-100 h-full">
+                  <div className={`w-12 h-12 rounded-2xl ${f.bg} flex items-center justify-center ${f.color} mb-5`}>
+                    <f.Icon className="w-6 h-6" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">{t(`landing.feat_${f.key}`)}</h3>
-                  <p className="text-gray-500">{t(`landing.feat_${f.key}_desc`)}</p>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{t(`landing.feat_${f.key}`)}</h3>
+                  <p className="text-gray-500 text-sm">{t(`landing.feat_${f.key}_desc`)}</p>
                 </div>
               </Reveal>
             ))}
+          </div>
 
-            {/* Journey — wide card */}
-            <Reveal delay={0.32} className="md:col-span-2">
-              <div className="bg-[#2C5C45] text-white rounded-3xl p-8 shadow-lg relative overflow-hidden group h-full">
-                <div className="absolute -right-10 -top-10 w-48 h-48 bg-white opacity-5 rounded-full group-hover:scale-150 transition-transform duration-700" />
-                <div className="relative z-10">
-                  <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-white mb-6">
+          {/* Journey — wide card */}
+          <Reveal delay={0.5} className="mt-8">
+            <div className="bg-[#2C5C45] text-white rounded-3xl p-8 shadow-lg relative overflow-hidden group">
+              <div className="absolute -right-10 -top-10 w-48 h-48 bg-white opacity-5 rounded-full group-hover:scale-150 transition-transform duration-700" />
+              <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div>
+                  <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-white mb-4">
                     <Compass className="w-7 h-7" />
                   </div>
                   <h3 className="text-2xl font-bold mb-3">{t('landing.feat_journey')}</h3>
-                  <p className="text-[#EAF0EC] text-lg max-w-xl mb-6">{t('landing.feat_journey_desc')}</p>
-                  <a href="#how-it-works" className="inline-flex items-center text-white font-medium hover:text-[#D4AF37] transition-colors">
-                    {t('landing.feat_journey_link')} <ArrowRight className="w-4 h-4 ml-2" />
-                  </a>
+                  <p className="text-[#EAF0EC] text-lg max-w-xl">{t('landing.feat_journey_desc')}</p>
                 </div>
+                <a href="#how-it-works" className="inline-flex items-center text-white font-medium hover:text-[#D4AF37] transition-colors whitespace-nowrap">
+                  {t('landing.feat_journey_link')} <ArrowRight className="w-4 h-4 ml-2" />
+                </a>
               </div>
-            </Reveal>
-          </div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -296,23 +303,41 @@ export default function LandingPage() {
               </div>
             </Reveal>
 
-            {/* 99 Names */}
+            {/* Weekly Report & Reflections */}
             <Reveal delay={0.1}>
               <div className="bg-[#2C5C45] text-white p-8 rounded-[2rem] shadow-xl">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="font-bold text-lg">{t('landing.names_title')}</h3>
-                  <BookOpen className="text-[#D4AF37] w-6 h-6" />
+                  <h3 className="font-bold text-lg">{t('landing.preview_report')}</h3>
+                  <Sparkles className="text-[#D4AF37] w-6 h-6" />
                 </div>
-                <div className="bg-white/10 backdrop-blur-md p-8 rounded-2xl text-center border border-white/20">
-                  <div className="text-4xl text-[#D4AF37] mb-4 font-serif leading-relaxed" dir="rtl">
-                    &#1575;&#1604;&#1585;&#1617;&#1614;&#1581;&#1618;&#1605;&#1614;&#1606;&#1615;
+                <div className="space-y-4">
+                  {/* Weekly completion bar */}
+                  <div className="bg-white/10 backdrop-blur-md p-5 rounded-2xl border border-white/20">
+                    <div className="flex justify-between items-center mb-3">
+                      <span className="text-sm font-medium">{t('landing.preview_weekly')}</span>
+                      <span className="text-[#D4AF37] font-bold text-lg">86%</span>
+                    </div>
+                    <div className="bg-white/20 h-2.5 rounded-full overflow-hidden">
+                      <div className="bg-[#D4AF37] w-[86%] h-full rounded-full" />
+                    </div>
+                    <div className="flex justify-between mt-3 text-xs text-[#EAF0EC]">
+                      {['M','T','W','T','F','S','S'].map((d, i) => (
+                        <div key={i} className="flex flex-col items-center gap-1">
+                          <div className={`w-5 h-5 rounded-full ${i < 6 ? 'bg-emerald-400' : 'bg-white/20'}`} />
+                          <span>{d}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <h4 className="text-2xl font-bold mb-2">Ar-Rahman</h4>
-                  <p className="text-[#EAF0EC]">{t('landing.names_meaning')}</p>
-                  <div className="mt-8 bg-white/20 h-2 rounded-full overflow-hidden">
-                    <div className="bg-[#D4AF37] w-1/3 h-full rounded-full" />
+                  {/* Reflection preview */}
+                  <div className="bg-white/10 backdrop-blur-md p-5 rounded-2xl border border-white/20">
+                    <div className="flex items-center gap-2 mb-2">
+                      <PenLine className="w-4 h-4 text-emerald-300" />
+                      <span className="text-sm font-medium">{t('landing.preview_reflection')}</span>
+                    </div>
+                    <p className="text-[#EAF0EC] text-sm italic">{t('landing.preview_reflection_text')}</p>
+                    <div className="mt-2 inline-block bg-white/20 text-xs px-2 py-0.5 rounded-full">2:153</div>
                   </div>
-                  <p className="text-xs text-[#EAF0EC] mt-2 text-left">{t('landing.names_progress')}</p>
                 </div>
               </div>
             </Reveal>
