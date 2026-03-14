@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Shield } from 'lucide-react'
 import ProgressOverview from './ProgressOverview'
 import PrayerHeatmap from './PrayerHeatmap'
-import PrayerCalendar from './PrayerCalendar'
+
 import WeeklyStats from './WeeklyStats'
 import Achievements from './Achievements'
 import CollapsibleCard from './CollapsibleCard'
@@ -85,7 +85,6 @@ export default function ProgressTab({ prayers, streak, history, freezes = 0 }) {
         </motion.p>
         <div className="space-y-4">
           <PrayerHeatmap prayers={prayers} history={history} />
-          <PrayerCalendar prayers={prayers} history={history} />
         </div>
       </section>
 
