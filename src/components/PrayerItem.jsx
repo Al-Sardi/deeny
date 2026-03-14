@@ -2,9 +2,14 @@ import { motion } from 'framer-motion'
 import { Check } from 'lucide-react'
 
 export default function PrayerItem({ name, completed, onToggle, time }) {
+  const handleToggle = () => {
+    if (navigator.vibrate) navigator.vibrate(30)
+    onToggle()
+  }
+
   return (
     <motion.button
-      onClick={onToggle}
+      onClick={handleToggle}
       whileTap={{ scale: 0.98 }}
       className={`flex w-full items-center justify-between rounded-2xl border px-5 py-4
         transition-colors duration-200
