@@ -26,7 +26,22 @@ import { supabase } from './lib/supabase'
 import { getToday, getYesterday } from './lib/dateUtils'
 
 const THEME_KEY = 'prayer-theme'
+const FREEZE_KEY = 'streak-freezes'
+const FREEZE_USED_KEY = 'streak-freeze-last-used'
 const TOTAL_PRAYERS = 5
+
+function getStreakFreezes() {
+  return parseInt(localStorage.getItem(FREEZE_KEY) ?? '2', 10)
+}
+function setStreakFreezes(n) {
+  localStorage.setItem(FREEZE_KEY, String(Math.max(0, n)))
+}
+function getLastFreezeUsed() {
+  return localStorage.getItem(FREEZE_USED_KEY) || ''
+}
+function setLastFreezeUsed(date) {
+  localStorage.setItem(FREEZE_USED_KEY, date)
+}
 
 const defaultPrayers = () => ({
   Fajr: false,
@@ -47,6 +62,7 @@ export default function App() {
 
   const [prayers, setPrayers] = useState(defaultPrayers())
   const [streak, setStreak] = useState(0)
+  const [freezes, setFreezes] = useState(getStreakFreezes)
   const [history, setHistory] = useState([])
   const [dataLoading, setDataLoading] = useState(true)
   const [syncStatus, setSyncStatus] = useState('saved') // 'saved' | 'saving' | 'error'
@@ -173,9 +189,33 @@ export default function App() {
           const yRow = yesterdayRes.data
           if (yRow) {
             const allDone = [yRow.fajr, yRow.dhuhr, yRow.asr, yRow.maghrib, yRow.isha].every(Boolean)
-            setStreak(allDone ? (yRow.streak ?? 0) + 1 : 0)
+            if (allDone) {
+              setStreak((yRow.streak ?? 0) + 1)
+            } else {
+              // Yesterday wasn't perfect — try to use a streak freeze
+              const yesterday = getYesterday()
+              const currentFreezes = getStreakFreezes()
+              if (currentFreezes > 0 && getLastFreezeUsed() !== yesterday) {
+                setStreakFreezes(currentFreezes - 1)
+                setFreezes(currentFreezes - 1)
+                setLastFreezeUsed(yesterday)
+                setStreak((yRow.streak ?? 0) + 1)
+              } else {
+                setStreak(0)
+              }
+            }
           } else {
-            setStreak(0)
+            // No data for yesterday at all — try freeze
+            const yesterday = getYesterday()
+            const currentFreezes = getStreakFreezes()
+            if (currentFreezes > 0 && streak > 0 && getLastFreezeUsed() !== yesterday) {
+              setStreakFreezes(currentFreezes - 1)
+              setFreezes(currentFreezes - 1)
+              setLastFreezeUsed(yesterday)
+              // Keep current streak (don't reset)
+            } else {
+              setStreak(0)
+            }
           }
         }
 
@@ -293,6 +333,21 @@ export default function App() {
     }
   }, [prayers])
 
+  // Earn a streak freeze every 7 consecutive days (max 3)
+  useEffect(() => {
+    const todayComplete = Object.values(prayers).every(Boolean)
+    const currentStreak = streak + (todayComplete ? 1 : 0)
+    if (currentStreak > 0 && currentStreak % 7 === 0) {
+      const earnedKey = `streak-freeze-earned-${currentStreak}`
+      if (!localStorage.getItem(earnedKey)) {
+        const newFreezes = Math.min(getStreakFreezes() + 1, 3)
+        setStreakFreezes(newFreezes)
+        setFreezes(newFreezes)
+        localStorage.setItem(earnedKey, '1')
+      }
+    }
+  }, [streak, prayers])
+
   const togglePrayer = (name) => setPrayers((prev) => ({ ...prev, [name]: !prev[name] }))
   const resetToday = () => setPrayers(defaultPrayers())
   const completedCount = Object.values(prayers).filter(Boolean).length
@@ -341,7 +396,7 @@ export default function App() {
 
           {activeTab === 'progress' && (
             <motion.div key="progress" variants={tabVariants} initial="initial" animate="animate" exit="exit">
-              <ProgressTab prayers={prayers} streak={streak} history={history} />
+              <ProgressTab prayers={prayers} streak={streak} history={history} freezes={freezes} />
             </motion.div>
           )}
 

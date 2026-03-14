@@ -184,6 +184,11 @@
     "account_exists": "Ein Konto mit dieser E-Mail existiert bereits.",
     "connection_error": "Verbindung zum Server nicht m\u00f6glich. Bitte pr\u00fcfe deine Verbindung."
   },
+  "freeze": {
+    "title": "Streak-Schutz",
+    "description": "Schützt deinen Streak für 1 verpassten Tag",
+    "earn_hint": "Verdiene einen Schutz alle 7 Tage Streak (max. 3)"
+  },
   "weekly": {
     "completion": "erledigt",
     "prayers_completed": "Gebete diese Woche",

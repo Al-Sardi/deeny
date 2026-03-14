@@ -184,6 +184,11 @@
     "account_exists": "An account with this email already exists.",
     "connection_error": "Unable to connect to the server. Please check your connection and try again."
   },
+  "freeze": {
+    "title": "Streak Freeze",
+    "description": "Protects your streak for 1 missed day",
+    "earn_hint": "Earn a freeze every 7-day streak (max 3)"
+  },
   "weekly": {
     "completion": "completed",
     "prayers_completed": "prayers this week",

@@ -184,6 +184,11 @@
     "account_exists": "Ya existe una cuenta con este correo.",
     "connection_error": "No se pudo conectar al servidor. Verifica tu conexi\u00f3n."
   },
+  "freeze": {
+    "title": "Protector de Racha",
+    "description": "Protege tu racha por 1 día perdido",
+    "earn_hint": "Gana un protector cada 7 días de racha (máx. 3)"
+  },
   "weekly": {
     "completion": "completado",
     "prayers_completed": "oraciones esta semana",
