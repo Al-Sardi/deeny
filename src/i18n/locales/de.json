@@ -73,7 +73,12 @@
     "dark_mode": "Dunkelmodus",
     "on": "An",
     "off": "Aus",
-    "language": "Sprache"
+    "language": "Sprache",
+    "notifications": "Benachrichtigungen",
+    "notifications_enabled": "Gebetserinnerungen",
+    "notifications_desc": "Werde vor jeder Gebetszeit benachrichtigt",
+    "minutes_before": "Erinnere mich vorher",
+    "notifications_blocked": "Benachrichtigungen sind blockiert. Bitte aktiviere sie in deinen Browser-Einstellungen."
   },
   "install": {
     "title": "Deeny installieren",

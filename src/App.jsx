@@ -11,6 +11,7 @@ import ToolsTab from './components/ToolsTab'
 import BottomNav from './components/BottomNav'
 import CelebrationModal from './components/CelebrationModal'
 import usePrayerTimes from './hooks/usePrayerTimes'
+import useNotifications from './hooks/useNotifications'
 import {
   fetchTodayPrayers,
   fetchYesterdayPrayers,
@@ -56,6 +57,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('prayers')
 
   const { prayerTimes, nextPrayer, nextPrayerTime, loading, error } = usePrayerTimes()
+  const { notificationSettings, updateNotificationSettings, notificationsSupported } = useNotifications(prayerTimes)
 
   const latestRef = useRef({ prayers: defaultPrayers(), streak: 0 })
   const dirtyRef = useRef(false)
@@ -351,7 +353,13 @@ export default function App() {
 
           {activeTab === 'settings' && (
             <motion.div key="settings" variants={tabVariants} initial="initial" animate="animate" exit="exit">
-              <SettingsTab dark={dark} onToggleTheme={() => setDark((d) => !d)} />
+              <SettingsTab
+                dark={dark}
+                onToggleTheme={() => setDark((d) => !d)}
+                notificationSettings={notificationSettings}
+                onUpdateNotificationSettings={updateNotificationSettings}
+                notificationsSupported={notificationsSupported}
+              />
             </motion.div>
           )}
         </AnimatePresence>

@@ -73,7 +73,12 @@
     "dark_mode": "Modo oscuro",
     "on": "Activado",
     "off": "Desactivado",
-    "language": "Idioma"
+    "language": "Idioma",
+    "notifications": "Notificaciones",
+    "notifications_enabled": "Recordatorios de oración",
+    "notifications_desc": "Recibe notificaciones antes de cada oración",
+    "minutes_before": "Recordar antes",
+    "notifications_blocked": "Las notificaciones están bloqueadas. Habilítalas en la configuración de tu navegador."
   },
   "install": {
     "title": "Instalar Deeny",

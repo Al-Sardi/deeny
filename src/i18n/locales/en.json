@@ -73,7 +73,12 @@
     "dark_mode": "Dark mode",
     "on": "On",
     "off": "Off",
-    "language": "Language"
+    "language": "Language",
+    "notifications": "Notifications",
+    "notifications_enabled": "Prayer reminders",
+    "notifications_desc": "Get notified before each prayer time",
+    "minutes_before": "Remind me before",
+    "notifications_blocked": "Notifications are blocked. Please enable them in your browser settings."
   },
   "install": {
     "title": "Install Deeny",

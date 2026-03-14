@@ -44,6 +44,8 @@ export default defineConfig({
         ],
       },
       workbox: {
+        // Import custom notification click handler into the generated SW
+        importScripts: ['notification-sw.js'],
         // Cache page navigations (SPA)
         navigateFallback: '/index.html',
         navigateFallbackAllowlist: [/^\/(?!auth)/],

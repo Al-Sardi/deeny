@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Mail, LogOut, ChevronRight, Globe } from 'lucide-react'
+import { Mail, LogOut, ChevronRight, Globe, Bell, BellOff } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 
@@ -11,7 +11,9 @@ const LANGUAGES = [
   { code: 'es', label: 'Espa\u00f1ol' },
 ]
 
-export default function SettingsTab({ dark, onToggleTheme }) {
+const MINUTES_OPTIONS = [5, 10, 15, 30]
+
+export default function SettingsTab({ dark, onToggleTheme, notificationSettings, onUpdateNotificationSettings, notificationsSupported }) {
   const { t, i18n } = useTranslation()
   const { user, signOut } = useAuth()
   const navigate = useNavigate()
@@ -59,6 +61,79 @@ export default function SettingsTab({ dark, onToggleTheme }) {
           </button>
         </div>
       </section>
+
+      {/* Notifications */}
+      {notificationsSupported && (
+        <section>
+          <h2 className="mb-2 px-1 text-sm font-medium text-zinc-500 dark:text-zinc-400">{t('settings.notifications')}</h2>
+          <div className="rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+            {/* Enable toggle */}
+            <div className={`flex items-center gap-3 px-5 py-4 ${notificationSettings?.enabled ? 'border-b border-zinc-100 dark:border-zinc-800' : ''}`}>
+              {notificationSettings?.enabled
+                ? <Bell size={16} className="text-emerald-500" strokeWidth={1.5} />
+                : <BellOff size={16} className="text-zinc-400 dark:text-zinc-500" strokeWidth={1.5} />
+              }
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{t('settings.notifications_enabled')}</p>
+                <p className="text-xs text-zinc-400 dark:text-zinc-500">{t('settings.notifications_desc')}</p>
+              </div>
+              <button
+                onClick={async () => {
+                  const ok = await onUpdateNotificationSettings({
+                    ...notificationSettings,
+                    enabled: !notificationSettings?.enabled,
+                  })
+                  if (!ok && !notificationSettings?.enabled) {
+                    // Permission denied — can't enable
+                  }
+                }}
+                role="switch"
+                aria-checked={notificationSettings?.enabled || false}
+                className={`relative inline-flex h-[26px] w-[44px] shrink-0 cursor-pointer items-center rounded-full transition-colors duration-200
+                  ${notificationSettings?.enabled ? 'bg-emerald-500' : 'bg-zinc-200 dark:bg-zinc-700'}`}
+              >
+                <motion.span
+                  layout
+                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                  className={`inline-block h-[20px] w-[20px] rounded-full bg-white shadow-sm
+                    ${notificationSettings?.enabled ? 'ml-[21px]' : 'ml-[3px]'}`}
+                />
+              </button>
+            </div>
+
+            {/* Minutes before selector */}
+            {notificationSettings?.enabled && (
+              <div className="flex items-center gap-3 px-5 py-4">
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{t('settings.minutes_before')}</p>
+                </div>
+                <div className="flex gap-1 rounded-xl bg-zinc-100 p-0.5 dark:bg-zinc-800">
+                  {MINUTES_OPTIONS.map((min) => (
+                    <button
+                      key={min}
+                      onClick={() => onUpdateNotificationSettings({ ...notificationSettings, minutesBefore: min })}
+                      className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-200
+                        ${notificationSettings?.minutesBefore === min
+                          ? 'bg-white text-emerald-700 shadow-sm dark:bg-zinc-700 dark:text-emerald-400'
+                          : 'text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200'
+                        }`}
+                    >
+                      {min} min
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Blocked notice */}
+            {typeof Notification !== 'undefined' && Notification.permission === 'denied' && (
+              <div className="px-5 py-3 text-xs text-amber-600 dark:text-amber-400">
+                {t('settings.notifications_blocked')}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Preferences */}
       <section>
