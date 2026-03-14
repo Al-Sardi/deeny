@@ -8,6 +8,7 @@ import {
   fetchPrayerStats,
   fetchTasbihTotal,
 } from '../lib/supabaseAchievements'
+import { countReflections } from '../lib/supabaseReflections'
 
 const ACHIEVEMENTS = [
   { id: 'first-prayer', label: 'First Step', description: 'Complete your first prayer', icon: '🌱', check: (s) => s.totalPrayers >= 1 },
@@ -20,6 +21,9 @@ const ACHIEVEMENTS = [
   { id: 'prayers-500', label: 'Faithful', description: 'Complete 500 prayers total', icon: '🌟', check: (s) => s.totalPrayers >= 500 },
   { id: 'tasbih-1000', label: 'Tasbih Master', description: 'Count 1,000 tasbih total', icon: '📿', check: (s) => s.tasbihTotal >= 1000 },
   { id: 'perfect-week', label: 'Perfect Week', description: 'Complete all prayers every day for a week', icon: '🏆', check: (s) => s.weeklyPerfect >= 7 },
+  { id: 'first-reflection', label: 'First Reflection', description: 'Write your first Quran reflection', icon: '📝', check: (s) => s.reflectionCount >= 1 },
+  { id: 'reflections-10', label: 'Deep Thinker', description: 'Write 10 reflections', icon: '🪞', check: (s) => s.reflectionCount >= 10 },
+  { id: 'reflections-52', label: 'Year of Wisdom', description: 'Write 52 weekly reflections', icon: '🧠', check: (s) => s.reflectionCount >= 52 },
 ]
 
 const fadeUp = {
@@ -36,21 +40,24 @@ export default function Achievements({ prayers, streak, history, inline = false 
   const [newlyUnlocked, setNewlyUnlocked] = useState([])
   const [dbStats, setDbStats] = useState(null)
   const [dbTasbihTotal, setDbTasbihTotal] = useState(0)
+  const [dbReflectionCount, setDbReflectionCount] = useState(0)
   const insertedRef = useRef(new Set())
 
   useEffect(() => {
     let cancelled = false
     async function load() {
       try {
-        const [achRes, statsRes, tasbihRes] = await Promise.all([
+        const [achRes, statsRes, tasbihRes, refRes] = await Promise.all([
           fetchUnlockedAchievements(user.id),
           fetchPrayerStats(user.id),
           fetchTasbihTotal(user.id),
+          countReflections(user.id),
         ])
         if (cancelled) return
         if (achRes.data) { setUnlocked(achRes.data); achRes.data.forEach((id) => insertedRef.current.add(id)) }
         if (statsRes.stats) setDbStats(statsRes.stats)
         setDbTasbihTotal(tasbihRes.total ?? 0)
+        setDbReflectionCount(refRes.count ?? 0)
       } catch (err) { console.error('Failed to load achievements:', err) }
 
       try {
@@ -77,7 +84,7 @@ export default function Achievements({ prayers, streak, history, inline = false 
     const bestStreak = Math.max(basebestStreak, streak + (todayPerfect ? 1 : 0))
     const recentHistory = history.slice(0, 6)
     const weeklyPerfect = recentHistory.filter((day) => Object.values(day.prayers).every(Boolean)).length + (todayPerfect ? 1 : 0)
-    const newStats = { totalPrayers, bestStreak, perfectDays, weeklyPerfect, tasbihTotal: dbTasbihTotal }
+    const newStats = { totalPrayers, bestStreak, perfectDays, weeklyPerfect, tasbihTotal: dbTasbihTotal, reflectionCount: dbReflectionCount }
 
     const freshUnlocks = ACHIEVEMENTS.filter(
       (a) => !unlocked.includes(a.id) && !insertedRef.current.has(a.id) && a.check(newStats)
@@ -91,7 +98,7 @@ export default function Achievements({ prayers, streak, history, inline = false 
       insertAchievements(user.id, freshUnlocks).catch(console.error)
       setTimeout(() => setNewlyUnlocked([]), 2000)
     }
-  }, [prayers, streak, history, dbStats, dbTasbihTotal, unlocked, user.id])
+  }, [prayers, streak, history, dbStats, dbTasbihTotal, dbReflectionCount, unlocked, user.id])
 
   const achievementRows = ACHIEVEMENTS.map((a, i) => {
     const isUnlocked = unlocked.includes(a.id)

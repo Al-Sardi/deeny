@@ -218,5 +218,38 @@
     "streak_maintained": "d\u00edas de racha",
     "alhamdulillah": "Alhamdulillah",
     "close": "Cerrar"
+  },
+  "reflection": {
+    "friday_title": "Reflexion del viernes",
+    "friday_subtitle": "Que aprendiste esta semana del Coran?",
+    "card_title": "Aprendizajes clave",
+    "card_subtitle": "Registra tus reflexiones del Coran",
+    "write_button": "Escribir reflexion",
+    "view_all": "Ver todas",
+    "timeline_title": "Aprendizajes clave",
+    "new_title": "Nueva reflexion",
+    "edit_title": "Editar reflexion",
+    "learning_label": "Que aprendiste?",
+    "learning_placeholder": "Aprendi que la paciencia y la confianza en Allah son esenciales en tiempos dificiles.",
+    "verse_label": "Referencia del versiculo (opcional)",
+    "verse_placeholder": "ej. 2:153",
+    "category_label": "Categoria (opcional)",
+    "save": "Guardar reflexion",
+    "saving": "Guardando...",
+    "empty": "Sin reflexiones aun. Comienza a registrar tus aprendizajes.",
+    "write_first": "Escribe tu primera reflexion",
+    "this_week": "Esta semana",
+    "last_week": "La semana pasada",
+    "weeks_ago": "Hace {{count}} semanas",
+    "categories": {
+      "patience": "Paciencia",
+      "gratitude": "Gratitud",
+      "tawakkul": "Tawakkul",
+      "mercy": "Misericordia",
+      "discipline": "Disciplina",
+      "forgiveness": "Perdon",
+      "humility": "Humildad",
+      "other": "Otro"
+    }
   }
 }

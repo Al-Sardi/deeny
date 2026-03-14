@@ -8,6 +8,7 @@ import DailyAyah from './components/DailyAyah'
 import ProgressTab from './components/ProgressTab'
 import SettingsTab from './components/SettingsTab'
 import QuickTools from './components/QuickTools'
+import FridayReflection from './components/FridayReflection'
 import QuranReader from './components/QuranReader'
 import BottomNav from './components/BottomNav'
 import CelebrationModal from './components/CelebrationModal'
@@ -393,6 +394,7 @@ export default function App() {
               />
               <ProgressBar completed={completedCount} total={TOTAL_PRAYERS} />
               <QuickTools />
+              <FridayReflection />
             </motion.div>
           )}
 

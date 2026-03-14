@@ -218,5 +218,38 @@
     "streak_maintained": "day streak",
     "alhamdulillah": "Alhamdulillah",
     "close": "Close"
+  },
+  "reflection": {
+    "friday_title": "Friday Reflection",
+    "friday_subtitle": "What did you learn this week from the Quran?",
+    "card_title": "Key Learnings",
+    "card_subtitle": "Record your Quran reflections",
+    "write_button": "Write a reflection",
+    "view_all": "View all",
+    "timeline_title": "Key Learnings",
+    "new_title": "New Reflection",
+    "edit_title": "Edit Reflection",
+    "learning_label": "What did you learn?",
+    "learning_placeholder": "I learned that patience and trust in Allah are essential during difficult times.",
+    "verse_label": "Verse reference (optional)",
+    "verse_placeholder": "e.g. 2:153",
+    "category_label": "Category (optional)",
+    "save": "Save Reflection",
+    "saving": "Saving...",
+    "empty": "No reflections yet. Start writing your learnings.",
+    "write_first": "Write your first reflection",
+    "this_week": "This week",
+    "last_week": "Last week",
+    "weeks_ago": "{{count}} weeks ago",
+    "categories": {
+      "patience": "Patience",
+      "gratitude": "Gratitude",
+      "tawakkul": "Tawakkul",
+      "mercy": "Mercy",
+      "discipline": "Discipline",
+      "forgiveness": "Forgiveness",
+      "humility": "Humility",
+      "other": "Other"
+    }
   }
 }

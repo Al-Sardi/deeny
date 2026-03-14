@@ -218,5 +218,38 @@
     "streak_maintained": "Tage-Streak",
     "alhamdulillah": "Alhamdulillah",
     "close": "Schlie\u00dfen"
+  },
+  "reflection": {
+    "friday_title": "Freitagsreflexion",
+    "friday_subtitle": "Was hast du diese Woche aus dem Quran gelernt?",
+    "card_title": "Erkenntnisse",
+    "card_subtitle": "Halte deine Quran-Reflexionen fest",
+    "write_button": "Reflexion schreiben",
+    "view_all": "Alle ansehen",
+    "timeline_title": "Erkenntnisse",
+    "new_title": "Neue Reflexion",
+    "edit_title": "Reflexion bearbeiten",
+    "learning_label": "Was hast du gelernt?",
+    "learning_placeholder": "Ich habe gelernt, dass Geduld und Vertrauen auf Allah in schwierigen Zeiten wichtig sind.",
+    "verse_label": "Vers-Referenz (optional)",
+    "verse_placeholder": "z.B. 2:153",
+    "category_label": "Kategorie (optional)",
+    "save": "Reflexion speichern",
+    "saving": "Speichern...",
+    "empty": "Noch keine Reflexionen. Beginne deine Erkenntnisse festzuhalten.",
+    "write_first": "Erste Reflexion schreiben",
+    "this_week": "Diese Woche",
+    "last_week": "Letzte Woche",
+    "weeks_ago": "Vor {{count}} Wochen",
+    "categories": {
+      "patience": "Geduld",
+      "gratitude": "Dankbarkeit",
+      "tawakkul": "Tawakkul",
+      "mercy": "Barmherzigkeit",
+      "discipline": "Disziplin",
+      "forgiveness": "Vergebung",
+      "humility": "Demut",
+      "other": "Sonstiges"
+    }
   }
 }

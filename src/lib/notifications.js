@@ -34,6 +34,18 @@ const PRAYER_TITLES = {
   es: (name) => `Oración de ${name}`,
 }
 
+const FRIDAY_REFLECTION_MESSAGES = {
+  en: 'Take a moment to reflect. What did you learn this week from the Quran?',
+  de: 'Nimm dir einen Moment zum Nachdenken. Was hast du diese Woche aus dem Quran gelernt?',
+  es: 'Toma un momento para reflexionar. ¿Qué aprendiste esta semana del Corán?',
+}
+
+const FRIDAY_TITLES = {
+  en: 'Friday Reflection',
+  de: 'Freitagsreflexion',
+  es: 'Reflexión del viernes',
+}
+
 let scheduledTimeouts = []
 
 export function getNotificationSettings() {
@@ -95,6 +107,23 @@ export function schedulePrayerNotifications(prayerTimes, minutesBefore, lang = '
       scheduledTimeouts.push(id)
     }
   }
+
+  // Friday reflection reminder — schedule at 13:00 (after Jumu'ah)
+  const today = new Date()
+  if (today.getDay() === 5) {
+    const fridayReminder = new Date()
+    fridayReminder.setHours(13, 0, 0, 0)
+    const fridayDelay = fridayReminder.getTime() - now
+    const shownKey = `friday-reflection-${today.toISOString().slice(0, 10)}`
+
+    if (fridayDelay > 0 && !localStorage.getItem(shownKey)) {
+      const id = setTimeout(() => {
+        localStorage.setItem(shownKey, '1')
+        showFridayReflectionNotification(lang)
+      }, fridayDelay)
+      scheduledTimeouts.push(id)
+    }
+  }
 }
 
 export function cancelPrayerNotifications() {
@@ -102,6 +131,26 @@ export function cancelPrayerNotifications() {
     clearTimeout(id)
   }
   scheduledTimeouts = []
+}
+
+async function showFridayReflectionNotification(lang) {
+  try {
+    const reg = await navigator.serviceWorker?.ready
+    if (!reg) return
+
+    const effectiveLang = FRIDAY_REFLECTION_MESSAGES[lang] ? lang : 'en'
+
+    await reg.showNotification(FRIDAY_TITLES[effectiveLang] || FRIDAY_TITLES.en, {
+      body: FRIDAY_REFLECTION_MESSAGES[effectiveLang],
+      icon: '/pwa-192x192.png',
+      badge: '/pwa-192x192.png',
+      tag: 'friday-reflection',
+      renotify: true,
+      vibrate: [200, 100, 200],
+    })
+  } catch (err) {
+    console.error('Failed to show Friday reflection notification:', err)
+  }
 }
 
 async function showPrayerNotification(prayerName, lang) {
