@@ -20,25 +20,23 @@ export default function QuickTools() {
 
   return (
     <>
-      {/* Horizontal scroll tiles */}
-      <div className="-mx-5 px-5">
-        <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-none">
-          {tools.map(({ id, labelKey, Icon, color, iconColor }, i) => (
-            <motion.button
-              key={id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.2, delay: i * 0.05 }}
-              onClick={() => setActiveTool(id)}
-              className={`flex min-w-[4.5rem] flex-col items-center gap-1.5 rounded-2xl ${color} px-4 py-3 transition-transform active:scale-95`}
-            >
-              <Icon size={20} className={iconColor} strokeWidth={1.5} />
-              <span className="whitespace-nowrap text-[11px] font-medium text-zinc-700 dark:text-zinc-300">
-                {t(labelKey)}
-              </span>
-            </motion.button>
-          ))}
-        </div>
+      {/* 2x2 Grid tiles */}
+      <div className="grid grid-cols-2 gap-3">
+        {tools.map(({ id, labelKey, Icon, color, iconColor }, i) => (
+          <motion.button
+            key={id}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.2, delay: i * 0.05 }}
+            onClick={() => setActiveTool(id)}
+            className={`flex flex-col items-center gap-1.5 rounded-2xl ${color} px-4 py-3 transition-transform active:scale-95`}
+          >
+            <Icon size={20} className={iconColor} strokeWidth={1.5} />
+            <span className="whitespace-nowrap text-[11px] font-medium text-zinc-700 dark:text-zinc-300">
+              {t(labelKey)}
+            </span>
+          </motion.button>
+        ))}
       </div>
 
       {/* Full-screen overlay when a tool is active */}
