@@ -414,9 +414,9 @@ export default function LandingPage() {
             <span className="font-bold text-xl text-[#1A3A2A]">Deeny</span>
           </div>
           <div className="flex space-x-6 text-sm text-gray-500">
-            <a href="#" className="hover:text-[#2C5C45] transition">{t('landing.privacy')}</a>
-            <a href="#" className="hover:text-[#2C5C45] transition">{t('landing.terms')}</a>
-            <a href="#" className="hover:text-[#2C5C45] transition">{t('landing.support')}</a>
+            <Link to="/datenschutz" className="hover:text-[#2C5C45] transition">{t('landing.privacy')}</Link>
+            <Link to="/impressum" className="hover:text-[#2C5C45] transition">Impressum</Link>
+            <a href="mailto:support@deeny.app" className="hover:text-[#2C5C45] transition">{t('landing.support')}</a>
           </div>
           <p className="text-sm text-gray-400">{t('landing.copyright')}</p>
         </div>

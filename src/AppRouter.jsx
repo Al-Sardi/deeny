@@ -5,6 +5,8 @@ import Login from './components/Login'
 import Signup from './components/Signup'
 import ProtectedRoute from './components/ProtectedRoute'
 import App from './App'
+import Impressum from './components/Impressum'
+import Datenschutz from './components/Datenschutz'
 import InstallPrompt from './components/InstallPrompt'
 
 /**
@@ -50,6 +52,10 @@ export default function AppRouter() {
             </ProtectedRoute>
           }
         />
+
+        {/* Legal pages — always public */}
+        <Route path="/impressum" element={<Impressum />} />
+        <Route path="/datenschutz" element={<Datenschutz />} />
 
         {/* Fallback — send unknown routes to landing */}
         <Route path="*" element={<Navigate to="/" replace />} />
