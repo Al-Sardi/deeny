@@ -47,7 +47,7 @@ const heatmapRows = [
 
 /* ─── Testimonials data ─── */
 const testimonials = [
-  { initial: 'A', nameKey: 'aisha', sourceKey: 'appstore' },
+  { initial: 'M', nameKey: 'aisha', sourceKey: 'founder' },
   { initial: 'O', nameKey: 'omar', sourceKey: 'playstore' },
   { initial: 'F', nameKey: 'fatima', sourceKey: 'appstore' },
 ]
