@@ -6,9 +6,11 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 
 const LANGUAGES = [
-  { code: 'en', label: 'English' },
-  { code: 'de', label: 'Deutsch' },
-  { code: 'es', label: 'Espa\u00f1ol' },
+  { code: 'en', label: 'English \u{1F1EC}\u{1F1E7}' },
+  { code: 'de', label: 'Deutsch \u{1F1E9}\u{1F1EA}' },
+  { code: 'es', label: 'Espa\u00f1ol \u{1F1EA}\u{1F1F8}' },
+  { code: 'fr', label: 'Fran\u00e7ais \u{1F1EB}\u{1F1F7}' },
+  { code: 'ar', label: '\u0627\u0644\u0639\u0631\u0628\u064A\u0629 \u{1F1F8}\u{1F1E6}' },
 ]
 
 const MINUTES_OPTIONS = [5, 10, 15, 30]
@@ -170,21 +172,15 @@ export default function SettingsTab({ dark, onToggleTheme, notificationSettings,
             <div className="min-w-0 flex-1">
               <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{t('settings.language')}</p>
             </div>
-            <div className="flex gap-1 rounded-xl bg-zinc-100 p-0.5 dark:bg-zinc-800">
+            <select
+              value={i18n.language}
+              onChange={(e) => i18n.changeLanguage(e.target.value)}
+              className="rounded-xl border border-zinc-200 bg-zinc-100 px-3 py-1.5 text-sm font-medium text-zinc-700 outline-none transition-colors hover:border-zinc-300 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:border-zinc-600"
+            >
               {LANGUAGES.map(({ code, label }) => (
-                <button
-                  key={code}
-                  onClick={() => i18n.changeLanguage(code)}
-                  className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-200
-                    ${i18n.language === code
-                      ? 'bg-white text-emerald-700 shadow-sm dark:bg-zinc-700 dark:text-emerald-400'
-                      : 'text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200'
-                    }`}
-                >
-                  {label}
-                </button>
+                <option key={code} value={code}>{label}</option>
               ))}
-            </div>
+            </select>
           </div>
         </div>
       </section>
