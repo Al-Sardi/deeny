@@ -60,30 +60,7 @@
     "dhikr_desc": "Browse and recite adhkar",
     "names": "99 Names of Allah",
     "names_desc": "Asma ul-Husna",
-    "dua": "Dua Generator",
-    "dua_desc": "AI-powered authentic Duas",
     "back": "Back to Tools"
-  },
-  "dua": {
-    "placeholder": "Enter a topic (e.g., exam, travel, illness...)",
-    "generate": "Find Duas",
-    "loading": "Finding authentic Duas\u2026",
-    "error": "Could not generate Duas. Please try again.",
-    "source": "Source",
-    "copy": "Copy",
-    "copied": "Copied!",
-    "recent": "Recent Searches",
-    "powered_by": "Powered by AI \u2014 Always verify with a qualified scholar",
-    "suggestions": {
-      "exam": "Exams",
-      "travel": "Travel",
-      "illness": "Illness",
-      "gratitude": "Gratitude",
-      "protection": "Protection",
-      "forgiveness": "Forgiveness",
-      "guidance": "Guidance",
-      "anxiety": "Anxiety"
-    }
   },
   "settings": {
     "account": "Account",

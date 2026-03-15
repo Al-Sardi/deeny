@@ -60,30 +60,7 @@
     "dhikr_desc": "Adhkar durchsuchen und rezitieren",
     "names": "99 Namen Allahs",
     "names_desc": "Asma ul-Husna",
-    "dua": "Dua-Generator",
-    "dua_desc": "KI-basierte authentische Duas",
     "back": "Zur\u00fcck zu Tools"
-  },
-  "dua": {
-    "placeholder": "Thema eingeben (z.B. Pr\u00fcfung, Reise, Krankheit...)",
-    "generate": "Duas finden",
-    "loading": "Authentische Duas werden gesucht\u2026",
-    "error": "Duas konnten nicht generiert werden. Bitte versuche es erneut.",
-    "source": "Quelle",
-    "copy": "Kopieren",
-    "copied": "Kopiert!",
-    "recent": "Letzte Suchen",
-    "powered_by": "KI-unterst\u00fctzt \u2014 Bitte immer bei einem Gelehrten verifizieren",
-    "suggestions": {
-      "exam": "Pr\u00fcfungen",
-      "travel": "Reise",
-      "illness": "Krankheit",
-      "gratitude": "Dankbarkeit",
-      "protection": "Schutz",
-      "forgiveness": "Vergebung",
-      "guidance": "Rechtleitung",
-      "anxiety": "Angst"
-    }
   },
   "settings": {
     "account": "Konto",

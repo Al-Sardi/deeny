@@ -1,15 +1,13 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Compass, CircleDot, BookOpenText, Star, Sparkles, X } from 'lucide-react'
+import { Compass, CircleDot, BookOpenText, Star, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import QiblaFinder from './QiblaFinder'
 import TasbihCounter from './TasbihCounter'
 import DhikrLibrary from './DhikrLibrary'
 import NamesOfAllah from './NamesOfAllah'
-import DuaGenerator from './DuaGenerator'
 
 const tools = [
-  { id: 'dua', labelKey: 'tools.dua', Icon: Sparkles, color: 'bg-teal-50 dark:bg-teal-900/20', iconColor: 'text-teal-500' },
   { id: 'qibla', labelKey: 'tools.qibla', Icon: Compass, color: 'bg-blue-50 dark:bg-blue-900/20', iconColor: 'text-blue-500' },
   { id: 'tasbih', labelKey: 'tools.tasbih', Icon: CircleDot, color: 'bg-purple-50 dark:bg-purple-900/20', iconColor: 'text-purple-500' },
   { id: 'dhikr', labelKey: 'tools.dhikr', Icon: BookOpenText, color: 'bg-amber-50 dark:bg-amber-900/20', iconColor: 'text-amber-500' },
@@ -69,7 +67,6 @@ export default function QuickTools() {
 
             {/* Tool content */}
             <div className="flex-1 overflow-y-auto px-5 pb-8">
-              {activeTool === 'dua' && <DuaGenerator />}
               {activeTool === 'qibla' && <QiblaFinder />}
               {activeTool === 'tasbih' && <TasbihCounter />}
               {activeTool === 'dhikr' && <DhikrLibrary onBack={() => setActiveTool(null)} />}

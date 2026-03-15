@@ -60,30 +60,7 @@
     "dhikr_desc": "Explorar y recitar adhkar",
     "names": "99 Nombres de Allah",
     "names_desc": "Asma ul-Husna",
-    "dua": "Generador de Dua",
-    "dua_desc": "Duas aut\u00e9nticas con IA",
     "back": "Volver a Herramientas"
-  },
-  "dua": {
-    "placeholder": "Introduce un tema (ej. examen, viaje, enfermedad...)",
-    "generate": "Buscar Duas",
-    "loading": "Buscando Duas aut\u00e9nticas\u2026",
-    "error": "No se pudieron generar Duas. Int\u00e9ntalo de nuevo.",
-    "source": "Fuente",
-    "copy": "Copiar",
-    "copied": "\u00a1Copiado!",
-    "recent": "B\u00fasquedas recientes",
-    "powered_by": "Impulsado por IA \u2014 Siempre verifica con un erudito calificado",
-    "suggestions": {
-      "exam": "Ex\u00e1menes",
-      "travel": "Viaje",
-      "illness": "Enfermedad",
-      "gratitude": "Gratitud",
-      "protection": "Protecci\u00f3n",
-      "forgiveness": "Perd\u00f3n",
-      "guidance": "Gu\u00eda",
-      "anxiety": "Ansiedad"
-    }
   },
   "settings": {
     "account": "Cuenta",
