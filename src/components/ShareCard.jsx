@@ -2,7 +2,7 @@ import { useState, useRef, useMemo, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { Share2, Download, X, Flame, CheckCircle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import html2canvas from 'html2canvas'
+import { toPng } from 'html-to-image'
 import { formatLocalDate } from '../lib/dateUtils'
 
 const PRAYER_NAMES = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']
@@ -48,16 +48,13 @@ export default function ShareCard({ prayers, streak, history, onClose }) {
     setGenerating(true)
 
     try {
-      const canvas = await html2canvas(cardRef.current, {
-        scale: 3,
-        backgroundColor: null,
-        useCORS: true,
-        logging: false,
+      const dataUrl = await toPng(cardRef.current, {
+        pixelRatio: 3,
+        backgroundColor: '#1A3A2A',
       })
 
-      const blob = await new Promise((resolve) =>
-        canvas.toBlob(resolve, 'image/png')
-      )
+      const res = await fetch(dataUrl)
+      const blob = await res.blob()
 
       if (!blob) throw new Error('Failed to generate image')
 
