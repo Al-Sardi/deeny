@@ -278,5 +278,19 @@
     "download_button": "تحميل",
     "generating": "جارٍ الإنشاء…",
     "close": "إغلاق"
+  },
+  "mosque": {
+    "section_title": "مواقيت الصلاة",
+    "title": "المسجد",
+    "calculated_times": "يتم استخدام الأوقات المحسوبة",
+    "select": "اختيار",
+    "change": "تغيير",
+    "remove": "إزالة",
+    "search_title": "البحث عن مسجد",
+    "search_placeholder": "ابحث بالاسم أو المدينة...",
+    "find_nearby": "مساجد قريبة",
+    "no_results": "لم يتم العثور على مساجد. جرّب بحثاً آخر.",
+    "search_error": "تعذّر البحث عن المساجد. يرجى المحاولة مرة أخرى.",
+    "location_error": "تعذّر تحديد موقعك."
   }
 }

@@ -278,5 +278,19 @@
     "download_button": "Download",
     "generating": "Generating…",
     "close": "Close"
+  },
+  "mosque": {
+    "section_title": "Prayer Times",
+    "title": "Mosque",
+    "calculated_times": "Using calculated prayer times",
+    "select": "Select",
+    "change": "Change",
+    "remove": "Remove",
+    "search_title": "Find a Mosque",
+    "search_placeholder": "Search by name or city...",
+    "find_nearby": "Find mosques near me",
+    "no_results": "No mosques found. Try a different search.",
+    "search_error": "Could not search mosques. Please try again.",
+    "location_error": "Could not get your location."
   }
 }

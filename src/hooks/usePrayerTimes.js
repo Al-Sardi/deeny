@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { getToday } from '../lib/dateUtils'
+import { getSavedMosque, fetchMosquePrayerTimes } from '../lib/mosqueApi'
 
 const CACHE_KEY = 'prayer-times-cache'
 const PRAYER_NAMES = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']
@@ -37,12 +38,37 @@ function loadCachedTimes() {
   return null
 }
 
-function cacheTimes(timings) {
-  localStorage.setItem(CACHE_KEY, JSON.stringify({ date: getToday(), timings }))
+function cacheTimes(timings, source = 'aladhan') {
+  localStorage.setItem(CACHE_KEY, JSON.stringify({ date: getToday(), timings, source }))
+}
+
+function getCachedSource() {
+  try {
+    const cached = JSON.parse(localStorage.getItem(CACHE_KEY))
+    if (cached && cached.date === getToday()) return cached.source || 'aladhan'
+  } catch { /* ignore */ }
+  return 'aladhan'
+}
+
+/** Fetch prayer times from AlAdhan API using GPS coordinates */
+async function fetchAladhanTimes(latitude, longitude) {
+  const timestamp = Math.floor(Date.now() / 1000)
+  const url = `https://api.aladhan.com/v1/timings/${timestamp}?latitude=${latitude}&longitude=${longitude}&method=4`
+  const res = await fetch(url)
+  if (!res.ok) throw new Error(`API error: ${res.status}`)
+  const json = await res.json()
+
+  const filtered = {}
+  for (const name of PRAYER_NAMES) {
+    filtered[name] = json.data.timings[name]
+  }
+  return filtered
 }
 
 /**
- * usePrayerTimes - Fetches prayer times via browser geolocation + Aladhan API.
+ * usePrayerTimes - Hybrid prayer times hook.
+ * If a mosque is selected → fetches from Mawaqit.
+ * Otherwise → uses geolocation + AlAdhan API.
  * Caches results in localStorage for the current day.
  * Re-computes the next prayer every 60 seconds.
  */
@@ -52,6 +78,7 @@ export default function usePrayerTimes() {
   const [error, setError] = useState(null)
   const [nextPrayer, setNextPrayer] = useState(null)
   const [nextPrayerTime, setNextPrayerTime] = useState(null)
+  const [source, setSource] = useState(getCachedSource)
 
   const updateNextPrayer = useCallback(() => {
     if (!prayerTimes) return
@@ -60,56 +87,68 @@ export default function usePrayerTimes() {
     setNextPrayerTime(next ? formatTime(next.time) : null)
   }, [prayerTimes])
 
-  // Fetch prayer times (cache-first, then geolocation + API)
+  // Fetch prayer times (cache-first, then mosque or geolocation)
   useEffect(() => {
     if (loadCachedTimes()) {
       setLoading(false)
       return
     }
 
-    if (!navigator.geolocation) {
-      setError('Geolocation is not supported by your browser.')
-      setLoading(false)
-      return
+    const mosque = getSavedMosque()
+
+    if (mosque) {
+      // Mosque mode: fetch from Mawaqit
+      fetchMosquePrayerTimes(mosque.uuid)
+        .then((times) => {
+          cacheTimes(times, 'mosque')
+          setPrayerTimes(times)
+          setSource('mosque')
+        })
+        .catch(() => {
+          setError('Could not fetch mosque prayer times. Falling back to calculated times.')
+          // Fallback to AlAdhan
+          fetchWithGeolocation()
+        })
+        .finally(() => setLoading(false))
+    } else {
+      // Default: AlAdhan with geolocation
+      fetchWithGeolocation()
     }
 
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords
-        const timestamp = Math.floor(Date.now() / 1000)
-        const url = `https://api.aladhan.com/v1/timings/${timestamp}?latitude=${latitude}&longitude=${longitude}&method=4`
-
-        try {
-          const res = await fetch(url)
-          if (!res.ok) throw new Error(`API error: ${res.status}`)
-          const json = await res.json()
-
-          // Extract only the 5 prayers we track
-          const filtered = {}
-          for (const name of PRAYER_NAMES) {
-            filtered[name] = json.data.timings[name]
-          }
-
-          cacheTimes(filtered)
-          setPrayerTimes(filtered)
-        } catch {
-          setError('Could not fetch prayer times. Please try again later.')
-        } finally {
-          setLoading(false)
-        }
-      },
-      (geoError) => {
-        if (geoError.code === geoError.PERMISSION_DENIED) {
-          setError('Location access denied. Enable location to see prayer times.')
-        } else if (geoError.code === geoError.POSITION_UNAVAILABLE) {
-          setError('Location unavailable. Please try again.')
-        } else {
-          setError('Location request timed out. Please try again.')
-        }
+    function fetchWithGeolocation() {
+      if (!navigator.geolocation) {
+        setError('Geolocation is not supported by your browser.')
         setLoading(false)
-      },
-      { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
-    )
+        return
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords
+          try {
+            const times = await fetchAladhanTimes(latitude, longitude)
+            cacheTimes(times, 'aladhan')
+            setPrayerTimes(times)
+            setSource('aladhan')
+          } catch {
+            setError('Could not fetch prayer times. Please try again later.')
+          } finally {
+            setLoading(false)
+          }
+        },
+        (geoError) => {
+          if (geoError.code === geoError.PERMISSION_DENIED) {
+            setError('Location access denied. Enable location to see prayer times.')
+          } else if (geoError.code === geoError.POSITION_UNAVAILABLE) {
+            setError('Location unavailable. Please try again.')
+          } else {
+            setError('Location request timed out. Please try again.')
+          }
+          setLoading(false)
+        },
+        { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
+      )
+    }
   }, [])
 
   // Re-compute next prayer on mount and every 60 seconds
@@ -119,5 +158,5 @@ export default function usePrayerTimes() {
     return () => clearInterval(interval)
   }, [updateNextPrayer])
 
-  return { prayerTimes, nextPrayer, nextPrayerTime, loading, error }
+  return { prayerTimes, nextPrayer, nextPrayerTime, loading, error, source }
 }

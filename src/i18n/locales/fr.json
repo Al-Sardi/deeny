@@ -278,5 +278,19 @@
     "download_button": "Telecharger",
     "generating": "Generation\u2026",
     "close": "Fermer"
+  },
+  "mosque": {
+    "section_title": "Horaires de pri\u00e8re",
+    "title": "Mosqu\u00e9e",
+    "calculated_times": "Horaires calcul\u00e9s utilis\u00e9s",
+    "select": "S\u00e9lectionner",
+    "change": "Changer",
+    "remove": "Supprimer",
+    "search_title": "Trouver une mosqu\u00e9e",
+    "search_placeholder": "Rechercher par nom ou ville...",
+    "find_nearby": "Mosqu\u00e9es \u00e0 proximit\u00e9",
+    "no_results": "Aucune mosqu\u00e9e trouv\u00e9e. Essayez une autre recherche.",
+    "search_error": "Impossible de rechercher des mosqu\u00e9es. Veuillez r\u00e9essayer.",
+    "location_error": "Impossible d'obtenir votre position."
   }
 }

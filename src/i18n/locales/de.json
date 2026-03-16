@@ -278,5 +278,19 @@
     "download_button": "Herunterladen",
     "generating": "Wird erstellt\u2026",
     "close": "Schlie\u00dfen"
+  },
+  "mosque": {
+    "section_title": "Gebetszeiten",
+    "title": "Moschee",
+    "calculated_times": "Berechnete Gebetszeiten werden verwendet",
+    "select": "Ausw\u00e4hlen",
+    "change": "\u00c4ndern",
+    "remove": "Entfernen",
+    "search_title": "Moschee finden",
+    "search_placeholder": "Nach Name oder Stadt suchen...",
+    "find_nearby": "Moscheen in meiner N\u00e4he",
+    "no_results": "Keine Moscheen gefunden. Versuche eine andere Suche.",
+    "search_error": "Moscheesuche fehlgeschlagen. Bitte versuche es erneut.",
+    "location_error": "Standort konnte nicht ermittelt werden."
   }
 }

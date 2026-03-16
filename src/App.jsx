@@ -430,6 +430,7 @@ export default function App() {
                 notificationSettings={notificationSettings}
                 onUpdateNotificationSettings={updateNotificationSettings}
                 notificationsSupported={notificationsSupported}
+                onMosqueChange={() => window.location.reload()}
               />
             </motion.div>
           )}

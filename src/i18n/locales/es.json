@@ -278,5 +278,19 @@
     "download_button": "Descargar",
     "generating": "Generando\u2026",
     "close": "Cerrar"
+  },
+  "mosque": {
+    "section_title": "Horarios de oraci\u00f3n",
+    "title": "Mezquita",
+    "calculated_times": "Usando horarios calculados",
+    "select": "Seleccionar",
+    "change": "Cambiar",
+    "remove": "Eliminar",
+    "search_title": "Buscar mezquita",
+    "search_placeholder": "Buscar por nombre o ciudad...",
+    "find_nearby": "Mezquitas cerca de m\u00ed",
+    "no_results": "No se encontraron mezquitas. Intenta otra b\u00fasqueda.",
+    "search_error": "No se pudo buscar mezquitas. Int\u00e9ntalo de nuevo.",
+    "location_error": "No se pudo obtener tu ubicaci\u00f3n."
   }
 }
