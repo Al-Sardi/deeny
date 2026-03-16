@@ -6,65 +6,64 @@
 const MAWAQIT_BASE = 'https://mawaqit.net/api/2.0'
 
 /**
- * Search mosques near given coordinates.
- * Returns up to 10 mosques with name, address, and UUID.
+ * Parse a Mawaqit mosque object into our internal format.
+ * The search endpoint already returns times + iqama inline.
  */
-export async function searchMosquesNearby(latitude, longitude) {
-  const url = `${MAWAQIT_BASE}/mosquee/search?word=&lat=${latitude}&lon=${longitude}`
-  const res = await fetch(url)
-  if (!res.ok) throw new Error(`Mawaqit API error: ${res.status}`)
-  const data = await res.json()
-
-  return data.map((m) => ({
+function parseMosque(m) {
+  return {
     uuid: m.uuid,
+    slug: m.slug,
     name: m.name,
     address: m.localisation || '',
     latitude: m.latitude,
     longitude: m.longitude,
-  }))
+    // times is an array of 6 strings: [Fajr, Sunrise, Dhuhr, Asr, Maghrib, Isha]
+    times: m.times,
+    iqama: m.iqama,
+    iqamaEnabled: m.iqamaEnabled,
+  }
+}
+
+/**
+ * Search mosques near given coordinates.
+ * Returns up to 10 mosques with name, address, UUID, and prayer times.
+ */
+export async function searchMosquesNearby(latitude, longitude) {
+  const url = `${MAWAQIT_BASE}/mosque/search?word=&lat=${latitude}&lon=${longitude}`
+  const res = await fetch(url)
+  if (!res.ok) throw new Error(`Mawaqit API error: ${res.status}`)
+  const data = await res.json()
+  return data.map(parseMosque)
 }
 
 /**
  * Search mosques by keyword (name or city).
  */
 export async function searchMosquesByKeyword(keyword) {
-  const url = `${MAWAQIT_BASE}/mosquee/search?word=${encodeURIComponent(keyword)}`
+  const url = `${MAWAQIT_BASE}/mosque/search?word=${encodeURIComponent(keyword)}`
   const res = await fetch(url)
   if (!res.ok) throw new Error(`Mawaqit API error: ${res.status}`)
   const data = await res.json()
-
-  return data.map((m) => ({
-    uuid: m.uuid,
-    name: m.name,
-    address: m.localisation || '',
-    latitude: m.latitude,
-    longitude: m.longitude,
-  }))
+  return data.map(parseMosque)
 }
 
 /**
- * Fetch prayer times for a specific mosque by its slug/uuid.
- * Returns today's 5 prayer times in "HH:MM" format.
+ * Extract the 5 prayer times from a saved mosque object.
+ * Mawaqit returns 6 times: [Fajr, Sunrise, Dhuhr, Asr, Maghrib, Isha].
+ * We skip Sunrise (index 1) and return the 5 obligatory prayers.
  */
-export async function fetchMosquePrayerTimes(uuid) {
-  const url = `${MAWAQIT_BASE}/mosquee/${uuid}/prayer-times`
-  const res = await fetch(url)
-  if (!res.ok) throw new Error(`Mawaqit API error: ${res.status}`)
-  const data = await res.json()
-
-  // Mawaqit returns an array of 5 times [Fajr, Dhuhr, Asr, Maghrib, Isha]
-  const names = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']
-  const times = data.times || data.calendar || data
-
-  if (Array.isArray(times) && times.length >= 5) {
-    const result = {}
-    names.forEach((name, i) => {
-      result[name] = times[i]
-    })
-    return result
+export function extractPrayerTimes(mosque) {
+  const t = mosque.times
+  if (!Array.isArray(t) || t.length < 6) {
+    throw new Error('Unexpected prayer times format from Mawaqit')
   }
-
-  throw new Error('Unexpected prayer times format from Mawaqit')
+  return {
+    Fajr: t[0],
+    Dhuhr: t[2],
+    Asr: t[3],
+    Maghrib: t[4],
+    Isha: t[5],
+  }
 }
 
 const MOSQUE_KEY = 'deeny-selected-mosque'

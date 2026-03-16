@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { getToday } from '../lib/dateUtils'
-import { getSavedMosque, fetchMosquePrayerTimes } from '../lib/mosqueApi'
+import { getSavedMosque, extractPrayerTimes } from '../lib/mosqueApi'
 
 const CACHE_KEY = 'prayer-times-cache'
 const PRAYER_NAMES = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']
@@ -97,19 +97,17 @@ export default function usePrayerTimes() {
     const mosque = getSavedMosque()
 
     if (mosque) {
-      // Mosque mode: fetch from Mawaqit
-      fetchMosquePrayerTimes(mosque.uuid)
-        .then((times) => {
-          cacheTimes(times, 'mosque')
-          setPrayerTimes(times)
-          setSource('mosque')
-        })
-        .catch(() => {
-          setError('Could not fetch mosque prayer times. Falling back to calculated times.')
-          // Fallback to AlAdhan
-          fetchWithGeolocation()
-        })
-        .finally(() => setLoading(false))
+      // Mosque mode: extract times from saved mosque data
+      try {
+        const times = extractPrayerTimes(mosque)
+        cacheTimes(times, 'mosque')
+        setPrayerTimes(times)
+        setSource('mosque')
+        setLoading(false)
+      } catch {
+        setError('Could not read mosque prayer times. Falling back to calculated times.')
+        fetchWithGeolocation()
+      }
     } else {
       // Default: AlAdhan with geolocation
       fetchWithGeolocation()
