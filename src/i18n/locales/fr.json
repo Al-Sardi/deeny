@@ -6,7 +6,7 @@
     "settings": "Parametres"
   },
   "header": {
-    "loading_prayer_times": "Chargement des horaires de priere\u2026",
+    "loading_prayer_times": "Chargement des horaires de priere…",
     "next": "Suivante :",
     "at": "a",
     "all_prayers_passed": "Toutes les prieres sont passees pour aujourd'hui",
@@ -22,10 +22,10 @@
   },
   "progress_bar": {
     "todays_progress": "Progres du jour",
-    "all_completed": "Toutes les prieres terminees \u2713"
+    "all_completed": "Toutes les prieres terminees ✓"
   },
   "daily_ayah": {
-    "loading": "Chargement du verset\u2026",
+    "loading": "Chargement du verset…",
     "unavailable": "Indisponible",
     "error": "Impossible de charger le verset du jour."
   },
@@ -66,7 +66,7 @@
     "account": "Compte",
     "email": "E-mail",
     "not_signed_in": "Non connecte",
-    "signing_out": "Deconnexion en cours\u2026",
+    "signing_out": "Deconnexion en cours…",
     "sign_out": "Se deconnecter",
     "preferences": "Preferences",
     "dark_mode": "Mode sombre",
@@ -141,7 +141,7 @@
     "preview_report": "Vos statistiques hebdomadaires",
     "preview_weekly": "Completion hebdomadaire",
     "preview_reflection": "Derniere reflexion",
-    "preview_reflection_text": "La patience et la confiance en Allah sont essentielles dans les moments difficiles\u2026",
+    "preview_reflection_text": "La patience et la confiance en Allah sont essentielles dans les moments difficiles…",
     "names_title": "99 Noms d'Allah",
     "names_meaning": "Le Tout Misericordieux",
     "names_progress": "33 / 99 appris",
@@ -163,7 +163,7 @@
     "privacy": "Politique de confidentialite",
     "terms": "Conditions d'utilisation",
     "support": "Contacter le support",
-    "copyright": "\u00a9 2026 Deeny App. Tous droits reserves.",
+    "copyright": "© 2026 Deeny App. Tous droits reserves.",
     "everything_you_need": "Tout ce dont vous avez besoin",
     "prayer_tracking": "Suivi des prieres",
     "prayer_tracking_desc": "Suivez vos cinq prieres quotidiennes d'un seul geste.",
@@ -173,7 +173,7 @@
     "monthly_calendar_desc": "Visualisez votre historique de priere dans un calendrier colore.",
     "daily_ayah": "Verset du jour",
     "daily_ayah_desc": "Commencez chaque journee avec un verset du Quran.",
-    "footer": "Deeny \u2014 Votre compagnon quotidien pour Salah."
+    "footer": "Deeny — Votre compagnon quotidien pour Salah."
   },
   "auth": {
     "welcome_back": "Bon retour",
@@ -181,13 +181,13 @@
     "email_placeholder": "vous@exemple.com",
     "password_label": "Mot de passe",
     "password_placeholder": "Votre mot de passe",
-    "signing_in": "Connexion en cours\u2026",
+    "signing_in": "Connexion en cours…",
     "sign_in": "Se connecter",
     "no_account": "Vous n'avez pas de compte ?",
     "sign_up": "S'inscrire",
     "create_account": "Creez votre compte",
     "password_min": "Min. 6 caracteres",
-    "creating_account": "Creation du compte\u2026",
+    "creating_account": "Creation du compte…",
     "have_account": "Vous avez deja un compte ?",
     "check_email": "Verifiez votre e-mail",
     "confirmation_sent": "Nous avons envoye un lien de confirmation a",
@@ -224,7 +224,7 @@
     "msg_start": "Une nouvelle semaine est un nouveau depart. Vous pouvez le faire !"
   },
   "celebration": {
-    "arabic": "\u0628\u0627\u0631\u0643 \u0627\u0644\u0644\u0647 \u0641\u064a\u0643",
+    "arabic": "بارك الله فيك",
     "transliteration": "Barakallahu feek",
     "message": "Toutes les prieres terminees aujourd'hui. Qu'Allah les accepte.",
     "xp_earned": "+50 XP",
@@ -276,21 +276,7 @@
     "keep_going_msg": "Chaque priere compte. Continuez !",
     "share_button": "Partager",
     "download_button": "Telecharger",
-    "generating": "Generation\u2026",
+    "generating": "Generation…",
     "close": "Fermer"
-  },
-  "mosque": {
-    "section_title": "Horaires de pri\u00e8re",
-    "title": "Mosqu\u00e9e",
-    "calculated_times": "Horaires calcul\u00e9s utilis\u00e9s",
-    "select": "S\u00e9lectionner",
-    "change": "Changer",
-    "remove": "Supprimer",
-    "search_title": "Trouver une mosqu\u00e9e",
-    "search_placeholder": "Rechercher par nom ou ville...",
-    "find_nearby": "Mosqu\u00e9es \u00e0 proximit\u00e9",
-    "no_results": "Aucune mosqu\u00e9e trouv\u00e9e. Essayez une autre recherche.",
-    "search_error": "Impossible de rechercher des mosqu\u00e9es. Veuillez r\u00e9essayer.",
-    "location_error": "Impossible d'obtenir votre position."
   }
 }

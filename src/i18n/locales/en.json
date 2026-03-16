@@ -6,7 +6,7 @@
     "settings": "Settings"
   },
   "header": {
-    "loading_prayer_times": "Loading prayer times\u2026",
+    "loading_prayer_times": "Loading prayer times…",
     "next": "Next:",
     "at": "at",
     "all_prayers_passed": "All prayers passed for today",
@@ -22,10 +22,10 @@
   },
   "progress_bar": {
     "todays_progress": "Today's progress",
-    "all_completed": "All prayers completed \u2713"
+    "all_completed": "All prayers completed ✓"
   },
   "daily_ayah": {
-    "loading": "Loading verse\u2026",
+    "loading": "Loading verse…",
     "unavailable": "Unavailable",
     "error": "Could not load daily ayah."
   },
@@ -66,7 +66,7 @@
     "account": "Account",
     "email": "Email",
     "not_signed_in": "Not signed in",
-    "signing_out": "Signing out\u2026",
+    "signing_out": "Signing out…",
     "sign_out": "Sign out",
     "preferences": "Preferences",
     "dark_mode": "Dark mode",
@@ -163,7 +163,7 @@
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "support": "Contact Support",
-    "copyright": "\u00a9 2026 Deeny App. All rights reserved.",
+    "copyright": "© 2026 Deeny App. All rights reserved.",
     "everything_you_need": "Everything you need",
     "prayer_tracking": "Prayer Tracking",
     "prayer_tracking_desc": "Track all five daily prayers with a single tap.",
@@ -173,7 +173,7 @@
     "monthly_calendar_desc": "Visualise your prayer history in a color-coded calendar.",
     "daily_ayah": "Daily Ayah",
     "daily_ayah_desc": "Start each day with a verse from the Quran.",
-    "footer": "Deeny \u2014 Your daily companion for Salah."
+    "footer": "Deeny — Your daily companion for Salah."
   },
   "auth": {
     "welcome_back": "Welcome back",
@@ -181,13 +181,13 @@
     "email_placeholder": "you@example.com",
     "password_label": "Password",
     "password_placeholder": "Your password",
-    "signing_in": "Signing in\u2026",
+    "signing_in": "Signing in…",
     "sign_in": "Sign in",
     "no_account": "Don't have an account?",
     "sign_up": "Sign up",
     "create_account": "Create your account",
     "password_min": "Min. 6 characters",
-    "creating_account": "Creating account\u2026",
+    "creating_account": "Creating account…",
     "have_account": "Already have an account?",
     "check_email": "Check your email",
     "confirmation_sent": "We sent a confirmation link to",
@@ -224,7 +224,7 @@
     "msg_start": "A new week is a fresh start. You can do this!"
   },
   "celebration": {
-    "arabic": "\u0628\u0627\u0631\u0643 \u0627\u0644\u0644\u0647 \u0641\u064a\u0643",
+    "arabic": "بارك الله فيك",
     "transliteration": "Barakallahu feek",
     "message": "All prayers completed today. May Allah accept them.",
     "xp_earned": "+50 XP",
@@ -278,19 +278,5 @@
     "download_button": "Download",
     "generating": "Generating…",
     "close": "Close"
-  },
-  "mosque": {
-    "section_title": "Prayer Times",
-    "title": "Mosque",
-    "calculated_times": "Using calculated prayer times",
-    "select": "Select",
-    "change": "Change",
-    "remove": "Remove",
-    "search_title": "Find a Mosque",
-    "search_placeholder": "Search by name or city...",
-    "find_nearby": "Find mosques near me",
-    "no_results": "No mosques found. Try a different search.",
-    "search_error": "Could not search mosques. Please try again.",
-    "location_error": "Could not get your location."
   }
 }

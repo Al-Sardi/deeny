@@ -4,7 +4,6 @@ import { motion } from 'framer-motion'
 import { Mail, LogOut, ChevronRight, Globe, Bell, BellOff } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
-import MosqueSelector from './MosqueSelector'
 
 const LANGUAGES = [
   { code: 'en', label: 'English \u{1F1EC}\u{1F1E7}' },
@@ -16,7 +15,7 @@ const LANGUAGES = [
 
 const MINUTES_OPTIONS = [5, 10, 15, 30]
 
-export default function SettingsTab({ dark, onToggleTheme, notificationSettings, onUpdateNotificationSettings, notificationsSupported, onMosqueChange }) {
+export default function SettingsTab({ dark, onToggleTheme, notificationSettings, onUpdateNotificationSettings, notificationsSupported }) {
   const { t, i18n } = useTranslation()
   const { user, signOut } = useAuth()
   const navigate = useNavigate()
@@ -137,14 +136,6 @@ export default function SettingsTab({ dark, onToggleTheme, notificationSettings,
           </div>
         </section>
       )}
-
-      {/* Prayer Times Source */}
-      <section>
-        <h2 className="mb-2 px-1 text-sm font-medium text-zinc-500 dark:text-zinc-400">{t('mosque.section_title')}</h2>
-        <div className="rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-          <MosqueSelector onMosqueChange={onMosqueChange} />
-        </div>
-      </section>
 
       {/* Preferences */}
       <section>

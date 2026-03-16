@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
 import { getToday } from '../lib/dateUtils'
-import { getSavedMosque, extractPrayerTimes } from '../lib/mosqueApi'
 
 const CACHE_KEY = 'prayer-times-cache'
 const PRAYER_NAMES = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']
@@ -38,16 +37,8 @@ function loadCachedTimes() {
   return null
 }
 
-function cacheTimes(timings, source = 'aladhan') {
-  localStorage.setItem(CACHE_KEY, JSON.stringify({ date: getToday(), timings, source }))
-}
-
-function getCachedSource() {
-  try {
-    const cached = JSON.parse(localStorage.getItem(CACHE_KEY))
-    if (cached && cached.date === getToday()) return cached.source || 'aladhan'
-  } catch { /* ignore */ }
-  return 'aladhan'
+function cacheTimes(timings) {
+  localStorage.setItem(CACHE_KEY, JSON.stringify({ date: getToday(), timings }))
 }
 
 /** Fetch prayer times from AlAdhan API using GPS coordinates */
@@ -78,7 +69,6 @@ export default function usePrayerTimes() {
   const [error, setError] = useState(null)
   const [nextPrayer, setNextPrayer] = useState(null)
   const [nextPrayerTime, setNextPrayerTime] = useState(null)
-  const [source, setSource] = useState(getCachedSource)
 
   const updateNextPrayer = useCallback(() => {
     if (!prayerTimes) return
@@ -94,59 +84,37 @@ export default function usePrayerTimes() {
       return
     }
 
-    const mosque = getSavedMosque()
-
-    if (mosque) {
-      // Mosque mode: extract times from saved mosque data
-      try {
-        const times = extractPrayerTimes(mosque)
-        cacheTimes(times, 'mosque')
-        setPrayerTimes(times)
-        setSource('mosque')
-        setLoading(false)
-      } catch {
-        setError('Could not read mosque prayer times. Falling back to calculated times.')
-        fetchWithGeolocation()
-      }
-    } else {
-      // Default: AlAdhan with geolocation
-      fetchWithGeolocation()
+    if (!navigator.geolocation) {
+      setError('Geolocation is not supported by your browser.')
+      setLoading(false)
+      return
     }
 
-    function fetchWithGeolocation() {
-      if (!navigator.geolocation) {
-        setError('Geolocation is not supported by your browser.')
-        setLoading(false)
-        return
-      }
-
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const { latitude, longitude } = position.coords
-          try {
-            const times = await fetchAladhanTimes(latitude, longitude)
-            cacheTimes(times, 'aladhan')
-            setPrayerTimes(times)
-            setSource('aladhan')
-          } catch {
-            setError('Could not fetch prayer times. Please try again later.')
-          } finally {
-            setLoading(false)
-          }
-        },
-        (geoError) => {
-          if (geoError.code === geoError.PERMISSION_DENIED) {
-            setError('Location access denied. Enable location to see prayer times.')
-          } else if (geoError.code === geoError.POSITION_UNAVAILABLE) {
-            setError('Location unavailable. Please try again.')
-          } else {
-            setError('Location request timed out. Please try again.')
-          }
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords
+        try {
+          const times = await fetchAladhanTimes(latitude, longitude)
+          cacheTimes(times)
+          setPrayerTimes(times)
+        } catch {
+          setError('Could not fetch prayer times. Please try again later.')
+        } finally {
           setLoading(false)
-        },
-        { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
-      )
-    }
+        }
+      },
+      (geoError) => {
+        if (geoError.code === geoError.PERMISSION_DENIED) {
+          setError('Location access denied. Enable location to see prayer times.')
+        } else if (geoError.code === geoError.POSITION_UNAVAILABLE) {
+          setError('Location unavailable. Please try again.')
+        } else {
+          setError('Location request timed out. Please try again.')
+        }
+        setLoading(false)
+      },
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
+    )
   }, [])
 
   // Re-compute next prayer on mount and every 60 seconds
@@ -156,5 +124,5 @@ export default function usePrayerTimes() {
     return () => clearInterval(interval)
   }, [updateNextPrayer])
 
-  return { prayerTimes, nextPrayer, nextPrayerTime, loading, error, source }
+  return { prayerTimes, nextPrayer, nextPrayerTime, loading, error }
 }
