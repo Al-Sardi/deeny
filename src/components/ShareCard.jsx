@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { Share2, Download, X, Flame, CheckCircle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toPng } from 'html-to-image'
+import DeenyLogo from './DeenyLogo'
 import { formatLocalDate } from '../lib/dateUtils'
 
 const PRAYER_NAMES = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']
@@ -111,12 +112,7 @@ export default function ShareCard({ prayers, streak, history, onClose }) {
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-1.5">
-                <img
-                  src="/logo.png"
-                  alt="Deeny"
-                  className="w-5 h-5 rounded-full"
-                  crossOrigin="anonymous"
-                />
+                <DeenyLogo className="w-6 h-6" />
                 <span className="text-white/90 font-bold text-sm tracking-tight">
                   Deeny
                 </span>

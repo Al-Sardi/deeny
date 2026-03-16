@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useRef } from 'react'
+import DeenyLogo from './DeenyLogo'
 
 /* ─── Reveal wrapper ─── */
 function Reveal({ children, className = '', delay = 0 }) {
@@ -63,7 +64,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <div className="flex items-center gap-2">
-              <img src="/logo.png" alt="Deeny" className="w-8 h-8 rounded-full" />
+              <DeenyLogo className="w-9 h-9" />
               <span className="font-bold text-2xl tracking-tight text-[#1A3A2A]">Deeny</span>
             </div>
             <div className="hidden md:flex space-x-8 text-sm font-medium">
@@ -360,7 +361,7 @@ export default function LandingPage() {
         </div>
         <Reveal className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl overflow-hidden">
-            <img src="/logo.png" alt="Deeny" className="w-10 h-10" />
+            <DeenyLogo className="w-10 h-10" />
           </div>
           <h2 className="text-4xl font-extrabold text-white sm:text-5xl mb-6">
             {t('landing.cta_title')}
@@ -382,7 +383,7 @@ export default function LandingPage() {
       <footer className="bg-white py-12 border-t border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2">
-            <img src="/logo.png" alt="Deeny" className="w-5 h-5 rounded-full" />
+            <DeenyLogo className="w-6 h-6" />
             <span className="font-bold text-xl text-[#1A3A2A]">Deeny</span>
           </div>
           <div className="flex space-x-6 text-sm text-gray-500">
@@ -391,6 +392,9 @@ export default function LandingPage() {
             <a href="mailto:support@deeny.app" className="hover:text-[#2C5C45] transition">{t('landing.support')}</a>
           </div>
           <p className="text-sm text-gray-400">{t('landing.copyright')}</p>
+        </div>
+        <div className="text-center mt-4 text-xs text-gray-400">
+          Icon by <a href="https://icons8.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#2C5C45] transition">Icons8</a>
         </div>
       </footer>
     </div>

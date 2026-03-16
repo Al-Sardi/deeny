@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { Mail, LogOut, ChevronRight, Globe, Bell, BellOff } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
+import DeenyLogo from './DeenyLogo'
 
 const LANGUAGES = [
   { code: 'en', label: 'English \u{1F1EC}\u{1F1E7}' },
@@ -143,7 +144,7 @@ export default function SettingsTab({ dark, onToggleTheme, notificationSettings,
         <div className="rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
           {/* Dark mode row */}
           <div className="flex items-center gap-3 border-b border-zinc-100 px-5 py-4 dark:border-zinc-800">
-            <img src="/logo.png" alt="" className="h-4 w-4" />
+            <DeenyLogo className="h-5 w-5" />
             <div className="min-w-0 flex-1">
               <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{t('settings.dark_mode')}</p>
               <p className="text-xs text-zinc-400 dark:text-zinc-500">

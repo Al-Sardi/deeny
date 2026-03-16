@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { Flame, Clock, Check, AlertCircle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import DeenyLogo from './DeenyLogo'
 
 export default function Header({ streak, nextPrayer, nextPrayerTime, loading, error, syncStatus }) {
   const { t } = useTranslation()
@@ -16,7 +17,7 @@ export default function Header({ streak, nextPrayer, nextPrayerTime, loading, er
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <img src="/logo.png" alt="Deeny" className="h-8 w-8" />
+            <DeenyLogo className="h-9 w-9" />
             {/* Sync indicator dot */}
             <AnimatePresence>
               {syncStatus === 'saving' && (

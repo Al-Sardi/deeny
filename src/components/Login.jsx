@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
+import DeenyLogo from './DeenyLogo'
 import { isSupabaseConfigured } from '../lib/supabase'
 
 export default function Login() {
@@ -43,7 +44,7 @@ export default function Login() {
     <div className="flex min-h-dvh items-center justify-center bg-zinc-50 px-5 dark:bg-zinc-950">
       <div className="w-full max-w-sm">
         <Link to="/" className="mb-10 flex flex-col items-center gap-2">
-          <img src="/logo.png" alt="Deeny" className="h-12 w-12" />
+          <DeenyLogo className="h-12 w-12" />
           <span className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">Deeny</span>
         </Link>
 

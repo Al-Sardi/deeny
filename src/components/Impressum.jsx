@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
+import DeenyLogo from './DeenyLogo'
 
 export default function Impressum() {
   return (
@@ -17,7 +18,7 @@ export default function Impressum() {
 
         {/* Logo & heading */}
         <div className="flex items-center gap-3 mb-10">
-          <img src="/logo.png" alt="Deeny" className="w-10 h-10 rounded-full" />
+          <DeenyLogo className="w-10 h-10" />
           <h1 className="text-2xl font-bold text-[#2C5C45]">Impressum</h1>
         </div>
 
