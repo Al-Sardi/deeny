@@ -57,9 +57,7 @@ async function fetchAladhanTimes(latitude, longitude) {
 }
 
 /**
- * usePrayerTimes - Hybrid prayer times hook.
- * If a mosque is selected → fetches from Mawaqit.
- * Otherwise → uses geolocation + AlAdhan API.
+ * usePrayerTimes - Fetches prayer times via geolocation + AlAdhan API.
  * Caches results in localStorage for the current day.
  * Re-computes the next prayer every 60 seconds.
  */
