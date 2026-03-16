@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { motion, useInView } from 'framer-motion'
 import {
   CheckSquare, TrendingUp, Grid3x3, BookHeart, Compass,
-  ArrowRight, Sun, Star, CheckCircle, BookOpen, Shield,
+  ArrowRight, Star, BookOpen, Shield,
   Bell, Sparkles, PenLine,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -141,44 +141,16 @@ export default function LandingPage() {
             >
               <div className="relative w-full max-w-sm mx-auto floating-anim">
                 <div className="absolute -inset-4 bg-[#EAF0EC] rounded-full blur-3xl opacity-70" />
-                <div className="phone-mockup w-full aspect-[1/2.1] mx-auto z-10 flex flex-col pt-12 px-6 pb-6 relative">
+                <div className="phone-mockup w-full aspect-[1/2.1] mx-auto z-10 relative overflow-hidden">
                   <div className="phone-notch" />
-                  {/* Inside phone */}
-                  <div className="flex justify-between items-center mb-8">
-                    <div>
-                      <p className="text-xs text-gray-400">{t('landing.phone_today')}</p>
-                      <h3 className="font-bold text-xl">{t('landing.phone_prayer')}</h3>
-                    </div>
-                    <div className="w-10 h-10 rounded-full bg-[#EAF0EC] flex items-center justify-center text-[#2C5C45]">
-                      <Sun className="w-5 h-5" />
-                    </div>
-                  </div>
-                  <div className="bg-white rounded-3xl p-5 shadow-sm mb-4 border border-gray-50">
-                    <div className="flex justify-between items-center mb-4">
-                      <span className="font-semibold">{t('landing.phone_streak')}</span>
-                      <span className="text-[#2C5C45] font-bold bg-[#EAF0EC] px-2 py-1 rounded-lg text-sm">{t('landing.phone_days')}</span>
-                    </div>
-                    <div className="flex justify-between gap-2">
-                      {['M','T','W','T','F'].map((d, i) => (
-                        <div
-                          key={i}
-                          className={`w-8 h-10 rounded-full flex items-center justify-center text-xs font-bold ${
-                            i < 3
-                              ? 'bg-[#2C5C45] text-white shadow-md'
-                              : i === 3
-                                ? 'border-2 border-[#2C5C45] text-[#2C5C45]'
-                                : 'bg-gray-100 text-gray-400'
-                          }`}
-                        >
-                          {d}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="bg-[#2C5C45] text-white rounded-3xl p-6 shadow-lg text-center mt-auto">
-                    <CheckCircle className="w-12 h-12 mx-auto mb-2 opacity-90" />
-                    <span className="font-semibold text-lg">{t('landing.phone_log')}</span>
-                  </div>
+                  <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover"
+                    src="/deeny-ad.mp4"
+                  />
                 </div>
               </div>
             </motion.div>
